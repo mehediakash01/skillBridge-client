@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/src/lib/utils";
-import { QueryProvider } from "@/src/components/providers/QueryProvider";
-import { Toaster } from "@/src/components/ui/sonner"; // ← shadcn sonner toaster
+import { QueryProvider } from "@/components/providers/QueryProvider";
+import { Toaster } from "@/components/ui/sonner"; // ← shadcn sonner toaster
 import { ThemeProvider } from "next-themes"; 
-import Navbar from "@/src/components/layout/Navbar";
-import Footer from "@/src/components/layout/Footer";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
