@@ -55,9 +55,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="  grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {featuredTutors.map((tutor) => (
-              <Card key={tutor.id} className="overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+              <Card key={tutor.id} className=" overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
                 <CardHeader className="p-6 pb-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-16 w-16 border-2 border-background">
