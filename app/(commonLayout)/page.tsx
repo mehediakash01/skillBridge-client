@@ -5,9 +5,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { featuredTutors } from "@/src/lib/mock-data";
+import { authClient } from "@/src/lib/auth-client";
 
 
-export default function Home() {
+export default async function Home() {
+  const session = await authClient.getSession();
+  console.log(session);
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero */}

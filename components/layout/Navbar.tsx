@@ -28,10 +28,10 @@ export default function Navbar() {
         {/* Desktop nav links */}
         <nav className="hidden md:flex items-center gap-6">
           <Link
-            href="/tutors"
+            href="/allTutor"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Browse Tutors
+            allTutor
           </Link>
           <Link
             href="/categories"
