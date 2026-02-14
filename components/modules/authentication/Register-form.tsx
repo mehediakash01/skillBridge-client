@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,8 +14,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { authClient } from "@/src/lib/auth-client"
 
 export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
+
+  const handleWithGoogle = async()=>{
+    const data = await authClient.signIn.social({
+      provider:"google",
+     
+      callbackURL:"http://localhost:3000"
+    })
+  }
   return (
     <Card {...props}>
       <CardHeader>
@@ -60,7 +70,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
             <FieldGroup>
               <Field>
                 <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
+                <Button onClick={()=>handleWithGoogle()} variant="outline" type="button">
                   Sign up with Google
                 </Button>
                 <FieldDescription className="px-6 text-center">
