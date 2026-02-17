@@ -14,12 +14,12 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero */}
-      <section className="relative bg-gradient-to-b from-primary/5 via-background to-background pb-16 pt-20 md:pt-32">
+      <section className="relative bg-linear-to-b from-primary/5 via-background to-background pb-16 pt-20 md:pt-32">
         <div className="container relative z-10 mx-auto px-4 text-center">
           <h1 className="mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Connect with Expert Tutors
             <br />
-            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               Learn Anything
             </span>
           </h1>
