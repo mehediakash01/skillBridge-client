@@ -88,3 +88,26 @@ export type TutorListItem = {
 
   tutorSubjects: TutorSubject[]
 }
+
+export type TutorProfileDetails = {
+  id: string
+  bio: string
+  hourlyRate: number
+  averageRate: number
+  experience: number
+
+  Student: TutorUserInfo
+
+  tutorSubjects: TutorSubject[]
+  availabilities: TutorAvailability[]
+}
+
+export type TutorFilterParams = {
+  search?: string
+  categoryId?: number
+  minPrice?: number
+  maxPrice?: number
+  minRating?: number
+  page?: number
+  limit?: number
+}
