@@ -1,11 +1,17 @@
 import { getTutorById } from "@/src/services/tutor.service"
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function TutorDetailsPage({ params }: Props) {
-  const tutor = await getTutorById(params.id)
+  const { id } = await params
+
+  const tutor = await getTutorById(id)
+console.log("tutor data",tutor);
+  if (!tutor || !tutor.Student) {
+    return <div>Tutor not found</div>
+  }
 
   return (
     <div className="container mx-auto py-10 max-w-4xl">
@@ -20,30 +26,9 @@ export default async function TutorDetailsPage({ params }: Props) {
           <h1 className="text-3xl font-bold">
             {tutor.Student.name}
           </h1>
-          <p className="text-gray-500">
-            {tutor.experience} years experience
-          </p>
-          <p className="mt-2 font-semibold">
-            ${tutor.hourlyRate}/hr
-          </p>
+          <p>{tutor.experience} years experience</p>
+          <p>${tutor.hourlyRate}/hr</p>
         </div>
-      </div>
-
-      <h2 className="text-xl font-semibold mb-2">About</h2>
-      <p className="text-gray-600 mb-6">
-        {tutor.bio}
-      </p>
-
-      <h2 className="text-xl font-semibold mb-2">Subjects</h2>
-      <div className="flex flex-wrap gap-2">
-        {tutor.tutorSubjects.map((s) => (
-          <span
-            key={s.category.id}
-            className="bg-gray-100 px-3 py-1 rounded"
-          >
-            {s.category.categoryName}
-          </span>
-        ))}
       </div>
     </div>
   )

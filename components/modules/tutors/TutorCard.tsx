@@ -13,7 +13,7 @@ export default function TutorCard({ tutor }: Props) {
     <div className="border rounded-xl p-5 shadow-sm hover:shadow-md transition">
       <div className="flex items-center gap-3 mb-4">
         <img
-          src={tutor.Student?.image || "/avatar.png"}
+          src={tutor.Student?.image || "/avatar.jpg"}
           alt={tutor.Student?.name}
           className="w-14 h-14 rounded-full object-cover"
         />

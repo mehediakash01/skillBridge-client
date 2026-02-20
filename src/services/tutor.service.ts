@@ -20,7 +20,7 @@ export async function getTutorById(
   id: string
 ): Promise<TutorProfileDetails> {
   const res = await fetch(
-    `${env.BACKEND_URL}/tutors/${id}`,
+    `${env.BACKEND_URL}/api/tutors/${id}`,
     { cache: "no-store" }
   )
 
