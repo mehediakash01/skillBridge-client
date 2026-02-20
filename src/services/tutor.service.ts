@@ -1,16 +1,19 @@
 import { TutorListItem, TutorProfileDetails } from "@/src/types"
 import { env } from "../env"
-
 export async function getTutors(): Promise<TutorListItem[]> {
-  const res = await fetch(`${env.BACKEND_URL}/api/tutors`, {
-    cache: "no-store",
-  })
+  const res = await fetch(
+    `${env.BACKEND_URL}/api/tutors`,
+    { cache: "no-store" }
+  )
 
   if (!res.ok) {
     throw new Error("Failed to fetch tutors")
   }
 
-  return res.json()
+  const result = await res.json()
+
+
+  return result.data
 }
 
 export async function getTutorById(
@@ -24,6 +27,7 @@ export async function getTutorById(
   if (!res.ok) {
     throw new Error("Failed to fetch tutor")
   }
+  const result = await res.json();
 
-  return res.json()
+  return result.data
 }
