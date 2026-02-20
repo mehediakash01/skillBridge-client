@@ -8,14 +8,16 @@ export default async function TutorDetailsPage({ params }: Props) {
   const { id } = await params
 
   const tutor = await getTutorById(id)
-console.log("tutor data",tutor);
+
   if (!tutor || !tutor.Student) {
-    return <div>Tutor not found</div>
+    return <div className="text-center py-20">Tutor not found</div>
   }
 
   return (
     <div className="container mx-auto py-10 max-w-4xl">
-      <div className="flex items-center gap-6 mb-6">
+      
+      {/* Header Section */}
+      <div className="flex items-center gap-6 mb-8">
         <img
           src={tutor.Student.image || "/avatar.png"}
           alt={tutor.Student.name}
@@ -26,10 +28,48 @@ console.log("tutor data",tutor);
           <h1 className="text-3xl font-bold">
             {tutor.Student.name}
           </h1>
-          <p>{tutor.experience} years experience</p>
-          <p>${tutor.hourlyRate}/hr</p>
+          <p className="text-gray-600">
+            {tutor.experience} years experience
+          </p>
+          <p className="text-lg font-semibold">
+            ${tutor.hourlyRate}/hr
+          </p>
+          <p className="text-yellow-500">
+            ⭐ {tutor.averageRate || "No rating yet"}
+          </p>
         </div>
       </div>
+
+      {/* Bio Section */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-2">About</h2>
+        <p className="text-gray-700">
+          {tutor.bio || "No bio available"}
+        </p>
+      </div>
+
+      {/* Subjects */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-2">Subjects</h2>
+        <div className="flex flex-wrap gap-3">
+          {tutor.tutorSubjects?.map((subject: any) => (
+            <span
+              key={subject.id}
+              className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm"
+            >
+              {subject.category?.name}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Booking Button */}
+      <div className="mt-10">
+        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+          Book This Tutor
+        </button>
+      </div>
+
     </div>
   )
 }
