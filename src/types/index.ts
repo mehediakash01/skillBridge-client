@@ -77,17 +77,24 @@ export type TutorUserInfo = {
   image?: string | null
 }
 
-export type TutorListItem = {
-  id: string
-  bio: string
-  hourlyRate: number
-  averageRate: number
-  experience: number
-
-  Student: TutorUserInfo
-
-  tutorSubjects: TutorSubject[]
+export interface TutorListItem {
+  id: string;
+  bio: string;
+  experience: number;
+  hourlyRate: string;
+  averageRate: string;
+  Student?: {
+    name: string;
+    image?: string;
+  };
+  tutorSubjects?: {
+    category: {
+      id: string;
+      categoryName: string;
+    };
+  }[];
 }
+
 
 export type TutorProfileDetails = {
   id: string

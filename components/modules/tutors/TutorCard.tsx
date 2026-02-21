@@ -27,17 +27,17 @@ export default function TutorCard({ tutor }: Props) {
           </p>
         </div>
       </div>
+<div className="flex flex-wrap gap-2 mb-3">
+  {(tutor.tutorSubjects || []).map((s) => (
+    <span
+      key={s.category.id}
+      className="text-xs bg-gray-100 px-2 py-1 rounded"
+    >
+      {s.category.categoryName}
+    </span>
+  ))}
+</div>
 
-      <div className="flex flex-wrap gap-2 mb-3">
-        {tutor.tutorSubjects.map((s) => (
-          <span
-            key={s.category.id}
-            className="text-xs bg-gray-100 px-2 py-1 rounded"
-          >
-            {s.category.categoryName}
-          </span>
-        ))}
-      </div>
 
       <p className="text-sm text-gray-600 line-clamp-2 mb-4">
         {tutor.bio}
