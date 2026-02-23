@@ -1,3 +1,4 @@
+import BookingForm from "@/components/modules/bookings/BookingForm"
 import { getTutorById } from "@/src/services/tutor.service"
 
 interface Props {
@@ -52,9 +53,9 @@ export default async function TutorDetailsPage({ params }: Props) {
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Subjects</h2>
         <div className="flex flex-wrap gap-3">
-          {tutor.tutorSubjects?.map((subject: any) => (
+          {tutor.tutorSubjects?.map((subject: any,indx) => (
             <span
-              key={subject.id}
+              key={indx}
               className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm"
             >
               {subject.category?.name}
@@ -64,11 +65,10 @@ export default async function TutorDetailsPage({ params }: Props) {
       </div>
 
       {/* Booking Button */}
-      <div className="mt-10">
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-          Book This Tutor
-        </button>
-      </div>
+   <div className="mt-10 w-fit">
+  <BookingForm tutorId={tutor.id} />
+</div>
+
 
     </div>
   )
