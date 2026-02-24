@@ -1,13 +1,12 @@
 import { env } from "../env"
 
 export const createBooking = async (payload: {
-  tutorId: string
-  date: string
+   tutorId: string
   startTime: string
   endTime: string
   note?: string
 }) => {
-  const res = await fetch(`${env.BACKEND_URL}/api/bookings`, {
+  const res = await fetch(`http://localhost:5000/api/bookings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
