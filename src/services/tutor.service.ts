@@ -93,7 +93,7 @@ export type AvailabilityGroup = Record<
 // ── Profile ──────────────────────────────────────────────
 
 export const getMyTutorProfile = async (): Promise<TutorProfile> => {
-  const res = await fetch(`${BASE_URL}/tutor/profile/me`, {
+  const res = await fetch(`${BASE_URL}/tutors/profile/me`, {
     credentials: "include",
   })
   if (!res.ok) {
@@ -110,7 +110,7 @@ export const updateTutorProfile = async (payload: {
   experience: number
   categoryIds: number[]
 }) => {
-  const res = await fetch(`${BASE_URL}/tutor/profile`, {
+  const res = await fetch(`${BASE_URL}/tutors/profile`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -126,7 +126,7 @@ export const updateTutorProfile = async (payload: {
 // ── Availability ─────────────────────────────────────────
 
 export const getMyAvailability = async (): Promise<AvailabilityGroup> => {
-  const res = await fetch(`${BASE_URL}/tutor/availability/me`, {
+  const res = await fetch(`${BASE_URL}/tutors/availability/me`, {
     credentials: "include",
   })
   if (!res.ok) {
@@ -140,7 +140,7 @@ export const getMyAvailability = async (): Promise<AvailabilityGroup> => {
 export const updateAvailability = async (
   slots: { dayOfWeek: string; startTime: string; endTime: string }[]
 ) => {
-  const res = await fetch(`${BASE_URL}/tutor/availability`, {
+  const res = await fetch(`${BASE_URL}/tutors/availability`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -156,7 +156,7 @@ export const updateAvailability = async (
 // ── Bookings ─────────────────────────────────────────────
 
 export const getTutorBookings = async (): Promise<TutorBooking[]> => {
-  const res = await fetch(`${BASE_URL}/bookings/tutor/me`, {
+  const res = await fetch(`${BASE_URL}/bookings/tutor`, {
     credentials: "include",
   })
   if (!res.ok) {
