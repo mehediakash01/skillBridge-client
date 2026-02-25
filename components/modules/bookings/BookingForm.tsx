@@ -23,48 +23,49 @@ interface Props {
   tutorId: string
 }
 
+interface Slot {
+  id: string
+  startTime: string
+  endTime: string
+  available: boolean
+}
+
 export default function BookingForm({ tutorId }: Props) {
   const [date, setDate] = useState<Date | undefined>()
   const [note, setNote] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const [slots, setSlots] = useState<string[]>([])
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
+  const [slots, setSlots] = useState<Slot[]>([])
+  const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null)
 
   /* ---------------- Fetch Availability ---------------- */
 
- useEffect(() => {
-  if (!date) return
+  useEffect(() => {
+    if (!date) return
 
-  const fetchAvailability = async () => {
-    try {
-      const formatted = format(date, "yyyy-MM-dd")
-      console.log("Tutor ID:", tutorId)
-      console.log("Date:", formatted)
+    const fetchAvailability = async () => {
+      try {
+        const formatted = format(date, "yyyy-MM-dd")
 
-      const availability = await getAvailability(tutorId, formatted)
+        const availability = await getAvailability(tutorId, formatted)
 
-      console.log("Availability Response:", availability)
+        if (!availability || availability.length === 0) {
+          setSlots([])
+          return
+        }
 
-      if (!availability || availability.length === 0) {
-        setSlots([])
-        return
+        setSlots(availability)
+      } catch (error: any) {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            "Failed to fetch availability"
+        )
       }
-
-      
-    } catch (error: any) {
-      console.error("Availability Error:", error)
-      toast.error(
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to fetch availability"
-      )
     }
-  }
 
-  fetchAvailability()
-}, [date, tutorId])
-
+    fetchAvailability()
+  }, [date, tutorId])
 
   /* ---------------- Submit Booking ---------------- */
 
@@ -82,19 +83,8 @@ export default function BookingForm({ tutorId }: Props) {
     try {
       setLoading(true)
 
-      const [start, end] = selectedSlot.split("-")
-
-      const startDateTime = new Date(date)
-      const [sh, sm] = start.split(":")
-      startDateTime.setHours(Number(sh))
-      startDateTime.setMinutes(Number(sm))
-      startDateTime.setSeconds(0)
-
-      const endDateTime = new Date(date)
-      const [eh, em] = end.split(":")
-      endDateTime.setHours(Number(eh))
-      endDateTime.setMinutes(Number(em))
-      endDateTime.setSeconds(0)
+      const startDateTime = new Date(selectedSlot.startTime)
+      const endDateTime = new Date(selectedSlot.endTime)
 
       await createBooking({
         tutorId,
@@ -105,7 +95,11 @@ export default function BookingForm({ tutorId }: Props) {
 
       toast.success("Booking successful!")
 
-      // Reset form
+      // refresh slots after booking
+      const formatted = format(date, "yyyy-MM-dd")
+      const updated = await getAvailability(tutorId, formatted)
+      setSlots(updated)
+
       setSelectedSlot(null)
       setNote("")
     } catch (error: any) {
@@ -145,7 +139,10 @@ export default function BookingForm({ tutorId }: Props) {
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={(d) => {
+                    setDate(d)
+                    setSelectedSlot(null)
+                  }}
                   disabled={(day) =>
                     isBefore(day, startOfDay(new Date()))
                   }
@@ -166,16 +163,31 @@ export default function BookingForm({ tutorId }: Props) {
             )}
 
             <div className="grid grid-cols-3 gap-2 mt-2">
-              {slots.map((slot) => (
-                <Button
-                  key={slot}
-                  type="button"
-                  variant={selectedSlot === slot ? "default" : "outline"}
-                  onClick={() => setSelectedSlot(slot)}
-                >
-                  {slot}
-                </Button>
-              ))}
+              {slots.map((slot) => {
+                const start = new Date(slot.startTime).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+
+                const end = new Date(slot.endTime).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+
+                return (
+                  <Button
+                    key={slot.id}
+                    type="button"
+                    disabled={!slot.available}
+                    variant={
+                      selectedSlot?.id === slot.id ? "default" : "outline"
+                    }
+                    onClick={() => setSelectedSlot(slot)}
+                  >
+                    {start} - {end}
+                  </Button>
+                )
+              })}
             </div>
           </div>
 
