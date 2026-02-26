@@ -51,7 +51,7 @@ export default function Navbar() {
     if (!user?.role) return "/dashboard";
     const role = user.role.toLowerCase();
     if (role.includes("tutor")) return "/tutor/dashboard";
-    if (role.includes("admin")) return "/admin/dashboard";
+    if (role.includes("admin")) return "/admin-dashboard";
     return "/dashboard"; 
   };
 
