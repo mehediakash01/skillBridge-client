@@ -45,7 +45,7 @@ export interface Category {
 // ── Stats ─────────────────────────────────────────────────
 
 export const getAdminStats = async (): Promise<AdminStats> => {
-  const res = await fetch(`${BASE_URL}/stats`, { credentials: "include" })
+  const res = await fetch(`${BASE_URL}/users/stats`, { credentials: "include" })
   if (!res.ok) throw new Error("Failed to fetch stats")
   const data = await res.json()
   return data.data
