@@ -1,3 +1,4 @@
+import { Booking } from "../services/booking.service";
 
 
 export interface User {
@@ -97,16 +98,15 @@ export interface TutorListItem {
 
 
 export type TutorProfileDetails = {
-  id: string
-  bio: string
-  hourlyRate: number
-  averageRate: number
-  experience: number
-
-  Student: TutorUserInfo
-
-  tutorSubjects: TutorSubject[]
-  availabilities: TutorAvailability[]
+  id: string;
+  bio: string;
+  hourlyRate: number;
+  averageRate: number;
+  experience: number;
+  Student: TutorUserInfo;
+  tutorSubjects: TutorSubject[];
+  availabilities: TutorAvailability[];
+  bookings?: Booking[]; 
 }
 
 export type TutorFilterParams = {
