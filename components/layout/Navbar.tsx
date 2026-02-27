@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Moon, Sun, Menu, LogOut, LayoutDashboard, GraduationCap, BookOpen, Lightbulb, ChevronDown } from "lucide-react";
+import { Moon, Sun, Menu, LogOut, LayoutDashboard, GraduationCap, BookOpen, Lightbulb, ChevronDown, Info } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useSession } from "@/src/hooks/useSession";
 import { cn } from "@/src/lib/utils";
@@ -21,6 +21,7 @@ const NAV_LINKS = [
   { href: "/tutors", label: "Find Tutors", icon: GraduationCap },
   { href: "/how-it-works", label: "How It Works", icon: Lightbulb },
   { href: "/become-a-tutor", label: "Become a Tutor", icon: BookOpen, badge: "Earn" },
+  { href: "/about-Us", label: "About Us", icon: Info },
 ];
 
 interface User {
@@ -88,11 +89,11 @@ export default function Navbar() {
               "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
               isTransparent ? "bg-white/20" : "bg-primary"
             )}>
-              <GraduationCap className={cn("w-4 h-4", isTransparent ? "text-black" : "text-primary-foreground")} />
+              <GraduationCap className={cn("w-4 h-4", isTransparent ? "" : "text-primary-foreground")} />
             </div>
             <span className={cn(
               "font-black text-xl tracking-tight transition-colors",
-              isTransparent ? "text-black" : "text-foreground"
+              isTransparent ? "" : "text-foreground"
             )} style={{ fontFamily: "'Fraunces', serif" }}>
               SkillBridge
             </span>
@@ -110,8 +111,8 @@ export default function Navbar() {
                     "relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all",
                     isTransparent
                       ? isActive
-                        ? "bg-white/20 text-black"
-                        : "text-black/80 hover:text-black hover:bg-white/10"
+                        ? "bg-white/20 "
+                        : "/80 hover: hover:bg-white/10"
                       : isActive
                         ? "bg-primary/8 text-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -121,7 +122,7 @@ export default function Navbar() {
                   {badge && (
                     <span className={cn(
                       "text-[10px] font-bold px-1.5 py-0.5 rounded-full",
-                      isTransparent ? "bg-accent/30 text-black" : "bg-accent/20 text-accent-foreground"
+                      isTransparent ? "bg-accent/30 " : "bg-accent/20 text-accent-foreground"
                     )}>
                       {badge}
                     </span>
@@ -147,7 +148,7 @@ export default function Navbar() {
                   size="icon"
                   className={cn(
                     "h-9 w-9 rounded-xl transition-colors",
-                    isTransparent ? "text-black/80 hover:text-black hover:bg-white/10" : ""
+                    isTransparent ? "/80 hover: hover:bg-white/10" : ""
                   )}
                 >
                   <Sun className={cn("h-4 w-4 transition-all", theme === "dark" && "scale-0 rotate-90 absolute")} />
@@ -171,12 +172,12 @@ export default function Navbar() {
                       <AvatarImage src={user?.image || user?.imageUrl || user?.avatar || ""} alt={user?.name} />
                       <AvatarFallback className={cn(
                         "text-sm font-bold",
-                        isTransparent ? "bg-white/20 text-black" : "bg-primary/10 text-primary"
+                        isTransparent ? "bg-white/20 " : "bg-primary/10 text-primary"
                       )}>
                         {user?.name?.charAt(0)?.toUpperCase() ?? "?"}
                       </AvatarFallback>
                     </Avatar>
-                    <ChevronDown className={cn("w-3 h-3", isTransparent ? "text-black/70" : "text-muted-foreground")} />
+                    <ChevronDown className={cn("w-3 h-3", isTransparent ? "/70" : "text-muted-foreground")} />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-64 rounded-xl">
@@ -212,7 +213,7 @@ export default function Navbar() {
                   variant="ghost" size="sm" asChild
                   className={cn(
                     "rounded-xl",
-                    isTransparent ? "text-black/80 hover:text-black hover:bg-white/10" : ""
+                    isTransparent ? "/80 hover: hover:bg-white/10" : ""
                   )}
                 >
                   <Link href="/login">Login</Link>
@@ -239,7 +240,7 @@ export default function Navbar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className={cn("h-10 w-10 rounded-xl", isTransparent ? "text-black hover:bg-white/10" : "")}
+                  className={cn("h-10 w-10 rounded-xl", isTransparent ? " hover:bg-white/10" : "")}
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
