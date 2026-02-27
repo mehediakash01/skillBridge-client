@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getMyBookings,
@@ -10,7 +10,7 @@ import {
 } from "@/src/services/booking.service"
 import { format } from "date-fns"
 import { toast } from "sonner"
-import { Star, ExternalLink, Loader2 } from "lucide-react"
+import { Star, ExternalLink, Loader2, CalendarDays, VideoOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -32,7 +32,12 @@ import {
   Dialog, DialogContent, DialogHeader,
   DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog"
-import { CalendarDays } from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import Link from "next/link"
 
 const statusVariant: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
@@ -42,7 +47,10 @@ const statusVariant: Record<string, "default" | "secondary" | "destructive" | "o
   pending: "outline",
 }
 
-// ── Star Rating Component ─────────────────────────────────
+// ── LocalStorage key for tracking joined sessions ─────────
+const joinedKey = (bookingId: string) => `joined_session_${bookingId}`
+
+// ── Star Rating ───────────────────────────────────────────
 function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const [hovered, setHovered] = useState(0)
   return (
@@ -56,7 +64,7 @@ function StarRating({ value, onChange }: { value: number; onChange: (v: number) 
           onMouseLeave={() => setHovered(0)}
         >
           <Star
-            className={`w-7 h-7 transition-colors ${
+            className={`w-8 h-8 transition-colors ${
               star <= (hovered || value)
                 ? "fill-yellow-400 text-yellow-400"
                 : "text-muted-foreground"
@@ -80,7 +88,7 @@ function ReviewDialog({ booking }: { booking: Booking }) {
   const { mutate: submit, isPending } = useMutation({
     mutationFn: submitReview,
     onSuccess: () => {
-      toast.success("Review submitted!")
+      toast.success("Review submitted! Thank you for your feedback.")
       queryClient.invalidateQueries({ queryKey: ["my-bookings"] })
       setOpen(false)
       setRating(0)
@@ -89,18 +97,14 @@ function ReviewDialog({ booking }: { booking: Booking }) {
     onError: (err: Error) => toast.error(err.message),
   })
 
-  const handleSubmit = () => {
-    if (rating === 0) return toast.error("Please select a rating")
-    if (!comment.trim()) return toast.error("Please write a comment")
-    submit({ bookingId: booking.id, rating, comment: comment.trim() })
-  }
-
+  // Already reviewed — show star badge only
   if (alreadyReviewed) {
     const review = booking.reviews[0]
     return (
-      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-        <span>{Number(review.rating).toFixed(1)} reviewed</span>
+      <div className="flex items-center gap-1.5 text-sm text-muted-foreground bg-yellow-50 border border-yellow-100 rounded-full px-3 py-1">
+        <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+        <span className="font-medium text-yellow-700">{Number(review.rating).toFixed(1)}</span>
+        <span className="text-yellow-600">reviewed</span>
       </div>
     )
   }
@@ -108,21 +112,23 @@ function ReviewDialog({ booking }: { booking: Booking }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline" className="text-yellow-600 border-yellow-200 hover:bg-yellow-50">
-          <Star className="w-3.5 h-3.5 mr-1" />
-          Review
+        <Button
+          size="sm"
+          variant="outline"
+          className="text-yellow-600 border-yellow-200 hover:bg-yellow-50 gap-1.5"
+        >
+          <Star className="w-3.5 h-3.5" />
+          Leave Review
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Leave a Review</DialogTitle>
+          <DialogTitle>How was your session?</DialogTitle>
         </DialogHeader>
         <div className="space-y-5 pt-2">
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">
-              Session with <span className="font-medium text-foreground">{booking.Tutor.bio}</span>
-            </p>
-            <p className="text-xs text-muted-foreground">
+          <div className="bg-muted/50 rounded-lg p-3">
+            <p className="font-medium text-sm">{booking.Tutor.bio}</p>
+            <p className="text-xs text-muted-foreground mt-1">
               {format(new Date(booking.startTime), "PPP")} ·{" "}
               {format(new Date(booking.startTime), "p")} –{" "}
               {format(new Date(booking.endTime), "p")}
@@ -130,26 +136,36 @@ function ReviewDialog({ booking }: { booking: Booking }) {
           </div>
 
           <div className="space-y-2">
-            <Label>Rating</Label>
+            <Label>Your Rating</Label>
             <StarRating value={rating} onChange={setRating} />
+            <p className="text-xs text-muted-foreground">
+              {rating === 1 && "Poor"}
+              {rating === 2 && "Fair"}
+              {rating === 3 && "Good"}
+              {rating === 4 && "Very Good"}
+              {rating === 5 && "Excellent!"}
+            </p>
           </div>
 
           <div className="space-y-2">
-            <Label>Comment</Label>
+            <Label>Your Comment</Label>
             <Textarea
               rows={4}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="How was your session? Was the tutor helpful?"
+              placeholder="Share your experience with this tutor..."
             />
           </div>
 
-          <Button onClick={handleSubmit} disabled={isPending} className="w-full">
-            {isPending ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Submitting...</>
-            ) : (
-              "Submit Review"
-            )}
+          <Button onClick={() => {
+            if (rating === 0) return toast.error("Please select a rating")
+            if (!comment.trim()) return toast.error("Please write a comment")
+            submit({ bookingId: booking.id, rating, comment: comment.trim() })
+          }} disabled={isPending} className="w-full">
+            {isPending
+              ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Submitting...</>
+              : "Submit Review"
+            }
           </Button>
         </div>
       </DialogContent>
@@ -157,13 +173,139 @@ function ReviewDialog({ booking }: { booking: Booking }) {
   )
 }
 
+// ── Actions cell logic ────────────────────────────────────
+function BookingActions({
+  booking,
+  onCancel,
+  cancelling,
+}: {
+  booking: Booking
+  onCancel: (id: string) => void
+  cancelling: boolean
+}) {
+  const [hasJoined, setHasJoined] = useState(false)
 
-const canReview = (booking: Booking) => {
+  // Read join state from localStorage on mount
+  useEffect(() => {
+    const joined = localStorage.getItem(joinedKey(booking.id))
+    if (joined === "true") setHasJoined(true)
+  }, [booking.id])
+
+  const handleJoin = () => {
+    // Mark as joined in localStorage
+    localStorage.setItem(joinedKey(booking.id), "true")
+    setHasJoined(true)
+    window.open(booking.meetingLink!, "_blank", "noopener,noreferrer")
+  }
+
   const alreadyReviewed = booking.reviews && booking.reviews.length > 0
-  if (alreadyReviewed) return true 
+  const hasMeetingLink = !!booking.meetingLink
+
+  // ── CANCELLED ─────────────────────────────────────────
+  if (booking.status === "cancelled") {
+    return <span className="text-sm text-muted-foreground">—</span>
+  }
+
+  // ── COMPLETED ─────────────────────────────────────────
+  if (booking.status === "completed") {
+    return (
+      <div className="flex items-center justify-end gap-2">
+        {/* Meeting link expired */}
+        {hasMeetingLink && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted rounded-full px-3 py-1 cursor-default">
+                  <VideoOff className="w-3.5 h-3.5" />
+                  Session ended
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>This session has been completed by the tutor</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+        {/* Review — available after completed */}
+        <ReviewDialog booking={booking} />
+      </div>
+    )
+  }
+
+  // ── CONFIRMED ─────────────────────────────────────────
   return (
-    booking.status === "completed" ||
-    (booking.status === "confirmed" && !!booking.meetingLink)
+    <div className="flex items-center justify-end gap-2 flex-wrap">
+
+      {/* Join button — only if link exists */}
+      {hasMeetingLink ? (
+        <Button
+          size="sm"
+          onClick={handleJoin}
+          className="gap-1.5"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          {hasJoined ? "Rejoin" : "Join Session"}
+        </Button>
+      ) : (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted rounded-full px-3 py-1 cursor-default">
+                <VideoOff className="w-3.5 h-3.5" />
+                Awaiting link
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Tutor hasn't added a meeting link yet</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+
+      {/* Review — only after joining */}
+      {hasJoined && !alreadyReviewed && (
+        <ReviewDialog booking={booking} />
+      )}
+
+      {/* Already reviewed badge */}
+      {alreadyReviewed && <ReviewDialog booking={booking} />}
+
+      {/* Cancel — only if tutor hasn't added a link yet */}
+      {!hasMeetingLink && (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              className="text-red-600 border-red-200 hover:bg-red-50"
+            >
+              Cancel
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel this booking?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Your session on {format(new Date(booking.startTime), "PPP")} from{" "}
+                {format(new Date(booking.startTime), "p")} to{" "}
+                {format(new Date(booking.endTime), "p")} will be cancelled.
+                This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep it</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-600 hover:bg-red-700"
+                onClick={() => onCancel(booking.id)}
+                disabled={cancelling}
+              >
+                Yes, cancel
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </div>
   )
 }
 
@@ -185,12 +327,33 @@ export default function BookingsPage() {
     onError: (err: Error) => toast.error(err.message),
   })
 
+  const confirmed = bookings.filter((b) => b.status === "confirmed")
+  const completed = bookings.filter((b) => b.status === "completed")
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">My Bookings</h1>
         <p className="text-muted-foreground mt-1">All your tutoring sessions in one place</p>
       </div>
+
+      {/* Quick stats */}
+      {!isLoading && bookings.length > 0 && (
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: "Total", value: bookings.length },
+            { label: "Upcoming", value: confirmed.length },
+            { label: "Completed", value: completed.length },
+          ].map((s) => (
+            <Card key={s.label}>
+              <CardContent className="pt-4 pb-4">
+                <p className="text-2xl font-bold">{s.value}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       <Card>
         <CardHeader className="pb-2">
@@ -206,7 +369,7 @@ export default function BookingsPage() {
                   <Skeleton className="h-4 w-40 flex-1" />
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-6 w-20 rounded-full" />
-                  <Skeleton className="h-8 w-16" />
+                  <Skeleton className="h-8 w-24" />
                 </div>
               ))}
             </div>
@@ -214,6 +377,7 @@ export default function BookingsPage() {
             <div className="p-16 text-center text-muted-foreground">
               <CalendarDays className="w-10 h-10 mx-auto mb-3 opacity-30" />
               <p className="font-medium">No bookings yet</p>
+              <p className="text-sm mt-1">Browse tutors and book your first session</p>
               <Link href="/tutors">
                 <Button variant="link" className="mt-2 h-auto p-0">Browse tutors →</Button>
               </Link>
@@ -235,63 +399,22 @@ export default function BookingsPage() {
                   <TableRow key={booking.id}>
                     <TableCell className="font-medium">{booking.Tutor.bio}</TableCell>
                     <TableCell>{format(new Date(booking.startTime), "PPP")}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-sm">
                       {format(new Date(booking.startTime), "p")} –{" "}
                       {format(new Date(booking.endTime), "p")}
                     </TableCell>
-                    <TableCell>${booking.totalPrice}</TableCell>
+                    <TableCell className="font-medium">${booking.totalPrice}</TableCell>
                     <TableCell>
                       <Badge variant={statusVariant[booking.status]}>
                         {booking.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center justify-end gap-2">
-                        {/* Join Meeting button */}
-                        {booking.meetingLink && booking.status === "confirmed" && (
-                          <a href={booking.meetingLink} target="_blank" rel="noopener noreferrer">
-                            <Button size="sm" className="gap-1.5">
-                              <ExternalLink className="w-3.5 h-3.5" />
-                              Join
-                            </Button>
-                          </a>
-                        )}
-
-                        {/* Review button/badge */}
-                        {canReview(booking) && (
-                          <ReviewDialog booking={booking} />
-                        )}
-
-                        {/* Cancel button */}
-                        {booking.status === "confirmed" && (
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
-                                Cancel
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Cancel this booking?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Your session on {format(new Date(booking.startTime), "PPP")} will be
-                                  cancelled. This cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Keep it</AlertDialogCancel>
-                                <AlertDialogAction
-                                  className="bg-red-600 hover:bg-red-700"
-                                  onClick={() => cancel(booking.id)}
-                                  disabled={cancelling}
-                                >
-                                  Yes, cancel
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        )}
-                      </div>
+                      <BookingActions
+                        booking={booking}
+                        onCancel={cancel}
+                        cancelling={cancelling}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
