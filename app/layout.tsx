@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 
 import { AuthProvider } from "@/components/providers/AuthProviders";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,8 +35,8 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <QueryProvider>
-            
-              <main className="min-h-[calc(100vh-8rem)]">{children}</main>
+              <TooltipProvider><main className="min-h-[calc(100vh-8rem)]">{children}</main></TooltipProvider>
+              
 
               
               

@@ -123,10 +123,11 @@ export const updateTutorProfile = async (payload: {
   return res.json()
 }
 
-// ── Availability ─────────────────────────────────────────
+// ── Availability ──────────────────────────────────────────
 
 export const getMyAvailability = async (): Promise<AvailabilityGroup> => {
-  const res = await fetch(`${BASE_URL}/tutors/availability/me`, {
+  
+  const res = await fetch(`${BASE_URL}/tutors/availability`, {
     credentials: "include",
   })
   if (!res.ok) {
