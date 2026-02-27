@@ -17,6 +17,8 @@ const formSchema = z.object({
 });
 
 import { easeInOut } from "framer-motion"; 
+import { useRouter } from "next/navigation";
+
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -34,6 +36,7 @@ const TRUST_ITEMS = [
 ];
 
 export function LoginForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,6 +59,7 @@ export function LoginForm() {
           toast.error(error.message, { id: toastId });
         } else {
           toast.success("Welcome back!", { id: toastId });
+          router.push("/"); // Redirect to home page
         }
       } catch {
         toast.error("Something went wrong. Try again.", { id: toastId });

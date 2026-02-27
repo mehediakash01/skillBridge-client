@@ -11,6 +11,8 @@ import Link from "next/link";
 import { Eye, EyeOff, ArrowRight, GraduationCap, BookOpen, Users, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/src/lib/utils";
+import { useRouter } from "next/navigation";
+
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -44,7 +46,7 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedRole, setSelectedRole] = useState<"STUDENT" | "TUTOR">("STUDENT");
-
+  const router = useRouter();
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
@@ -64,6 +66,7 @@ export function RegisterForm() {
           toast.error(error.message, { id: toastId });
         } else {
           toast.success("Account created! Welcome to SkillBridge 🎉", { id: toastId });
+          router.push("/"); 
         }
       } catch {
         toast.error("Something went wrong. Try again.", { id: toastId });
