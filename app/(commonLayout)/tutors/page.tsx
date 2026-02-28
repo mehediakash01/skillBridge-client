@@ -391,20 +391,6 @@ export default function TutorsPage() {
     </Suspense>
   )
 }
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import TutorCard from "@/components/modules/tutors/TutorCard"
-import { Search, SlidersHorizontal, X, GraduationCap, ChevronLeft, ChevronRight } from "lucide-react"
 
 const SORT_OPTIONS = [
   { value: "createdAt-desc", label: "Newest" },
