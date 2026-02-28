@@ -4,20 +4,15 @@ import { useState } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getTutorBookings, completeBooking } from "@/src/services/tutor.service"
 import { cancelBooking } from "@/src/services/booking.service"
-import { format } from "date-fns"
+import { format, differenceInDays, isPast } from "date-fns"
 import { toast } from "sonner"
-import { CalendarDays, CheckCircle, Clock, Link2, Loader2 } from "lucide-react"
+import { CalendarDays, CheckCircle2, Clock, Link2, Loader2, User, DollarSign, TrendingUp, AlertCircle, Video, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Table, TableBody, TableCell,
-  TableHead, TableHeader, TableRow,
-} from "@/components/ui/table"
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel,
   AlertDialogContent, AlertDialogDescription,
@@ -78,13 +73,13 @@ function MeetingLinkDialog({ bookingId, currentLink }: { bookingId: string; curr
         <Button
           size="sm"
           variant="outline"
-          className={currentLink
+          className={`rounded-lg gap-1.5 ${currentLink
             ? "text-green-600 border-green-200 hover:bg-green-50"
             : "text-blue-600 border-blue-200 hover:bg-blue-50"
-          }
+          }`}
         >
-          <Link2 className="w-3.5 h-3.5 mr-1" />
-          {currentLink ? "Edit Link" : "Add Link"}
+          <Video className="w-3.5 h-3.5" />
+          {currentLink ? "Edit" : "Add"} Link
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -100,8 +95,9 @@ function MeetingLinkDialog({ bookingId, currentLink }: { bookingId: string; curr
             value={link}
             onChange={(e) => setLink(e.target.value)}
             placeholder="https://meet.google.com/xxx-xxxx-xxx"
+            className="rounded-lg h-10"
           />
-          <Button onClick={handleSave} disabled={isPending} className="w-full">
+          <Button onClick={handleSave} disabled={isPending} className="w-full rounded-lg">
             {isPending
               ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving...</>
               : "Save Link"
@@ -110,6 +106,125 @@ function MeetingLinkDialog({ bookingId, currentLink }: { bookingId: string; curr
         </div>
       </DialogContent>
     </Dialog>
+  )
+}
+
+// ── Session Card Component ─────────────────────────────────
+function SessionCard({ booking, completing, cancelling, onComplete, onCancel }: any) {
+  const nextSession = !isPast(new Date(booking.endTime))
+  const daysUntil = differenceInDays(new Date(booking.startTime), new Date())
+
+  return (
+    <div className="rounded-2xl border bg-card overflow-hidden hover:shadow-md transition-shadow">
+      {/* Header */}
+      <div className={`px-6 py-4 border-b ${nextSession ? 'bg-blue-50/50' : 'bg-muted/30'}`}>
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-4 flex-1">
+            <Avatar className="h-12 w-12 border-2 border-muted">
+              <AvatarImage src={booking.Student.image ?? ""} />
+              <AvatarFallback className="text-sm font-bold">{booking.Student.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-foreground">{booking.Student.name}</p>
+              <p className="text-sm text-muted-foreground">{booking.Student.email}</p>
+            </div>
+          </div>
+          <Badge variant={statusVariant[booking.status]} className="rounded-full">
+            {booking.status}
+          </Badge>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="px-6 py-4 space-y-4">
+        {/* Date & Time */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-xs text-muted-foreground font-medium mb-1">Date</p>
+            <p className="text-sm font-medium">{format(new Date(booking.startTime), "MMM dd, yyyy")}</p>
+            {nextSession && daysUntil >= 0 && (
+              <p className="text-xs text-blue-600 mt-1">{daysUntil === 0 ? "Today" : `In ${daysUntil} days`}</p>
+            )}
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground font-medium mb-1">Time</p>
+            <p className="text-sm font-medium">{format(new Date(booking.startTime), "h:mm a")} - {format(new Date(booking.endTime), "h:mm a")}</p>
+          </div>
+        </div>
+
+        {/* Price */}
+        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+          <span className="text-sm text-muted-foreground">Total Price</span>
+          <span className="text-lg font-bold text-green-600">${booking.totalPrice}</span>
+        </div>
+
+        {/* Meeting Link Status */}
+        {booking.status === "confirmed" && (
+          <div className={`flex items-center gap-2 p-3 rounded-lg border ${booking.meetingLink ? 'bg-green-50/50 border-green-200' : 'bg-amber-50/50 border-amber-200'}`}>
+            <AlertCircle className={`w-4 h-4 ${booking.meetingLink ? 'text-green-600' : 'text-amber-600'}`} />
+            <span className={`text-sm ${booking.meetingLink ? 'text-green-700' : 'text-amber-700'}`}>
+              {booking.meetingLink ? "Meeting link added" : "No meeting link yet"}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      {booking.status === "confirmed" && (
+        <>
+          <Separator />
+          <div className="px-6 py-4 flex items-center gap-2 flex-wrap justify-end">
+            <MeetingLinkDialog bookingId={booking.id} currentLink={booking.meetingLink} />
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="outline" className="text-green-600 border-green-200 hover:bg-green-50 rounded-lg gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Complete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Mark as completed?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will mark the session with {booking.Student.name} as completed.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => onComplete(booking.id)} disabled={completing}>
+                    {completing ? "Completing..." : "Yes, complete"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 rounded-lg gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  Cancel
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Cancel this session?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will cancel the session with {booking.Student.name}. Cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Keep it</AlertDialogCancel>
+                  <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={() => onCancel(booking.id)} disabled={cancelling}>
+                    {cancelling ? "Cancelling..." : "Yes, cancel"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </>
+      )}
+    </div>
   )
 }
 
@@ -142,168 +257,119 @@ export default function TutorSessionsPage() {
 
   const confirmed = bookings.filter((b) => b.status === "confirmed")
   const completed = bookings.filter((b) => b.status === "completed")
+  const totalEarnings = bookings.reduce((sum, b) => sum + (b.status === "completed" ? Number(b.totalPrice) : 0), 0)
+  const pendingEarnings = confirmed.reduce((sum, b) => sum + Number(b.totalPrice), 0)
 
   const stats = [
-    { label: "Upcoming", value: confirmed.length, icon: Clock, color: "text-blue-600" },
-    { label: "Completed", value: completed.length, icon: CheckCircle, color: "text-green-600" },
-    { label: "Total", value: bookings.length, icon: CalendarDays, color: "text-purple-600" },
+    { label: "Upcoming Sessions", value: confirmed.length, icon: Clock, color: "from-blue-50 to-blue-100/50", accent: "text-blue-600" },
+    { label: "Completed Sessions", value: completed.length, icon: CheckCircle2, color: "from-green-50 to-green-100/50", accent: "text-green-600" },
+    { label: "Total Earnings", value: `$${totalEarnings}`, icon: DollarSign, color: "from-purple-50 to-purple-100/50", accent: "text-purple-600" },
+    { label: "Pending Earnings", value: `$${pendingEarnings}`, icon: TrendingUp, color: "from-amber-50 to-amber-100/50", accent: "text-amber-600" },
   ]
 
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Sessions</h1>
-        <p className="text-muted-foreground mt-1">Manage your tutoring sessions</p>
+        <h1 className="text-3xl font-bold tracking-tight">Sessions Dashboard</h1>
+        <p className="text-muted-foreground mt-2">Manage and track all your tutoring sessions</p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon
           return (
-            <Card key={stat.label}>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                    {isLoading
-                      ? <Skeleton className="h-8 w-12 mt-1" />
-                      : <p className="text-3xl font-bold mt-1">{stat.value}</p>
-                    }
-                  </div>
-                  <Icon className={`w-8 h-8 ${stat.color}`} />
+            <div key={stat.label} className={`rounded-2xl border bg-gradient-to-br ${stat.color} p-6`}>
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
+                  {isLoading ? (
+                    <Skeleton className="h-8 w-20 mt-2" />
+                  ) : (
+                    <p className="text-2xl lg:text-3xl font-bold mt-2">{stat.value}</p>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
+                <div className={`w-10 h-10 rounded-lg bg-white/50 flex items-center justify-center`}>
+                  <Icon className={`w-5 h-5 ${stat.accent}`} />
+                </div>
+              </div>
+            </div>
           )
         })}
       </div>
 
-      {/* Sessions table */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">All Sessions</CardTitle>
-        </CardHeader>
-        <Separator />
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="p-6 space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <Skeleton className="h-10 w-10 rounded-full" />
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-4 w-40 flex-1" />
-                  <Skeleton className="h-6 w-20 rounded-full" />
-                </div>
-              ))}
+      {/* Upcoming Sessions Section */}
+      {confirmed.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold">Upcoming Sessions</h2>
+              <p className="text-sm text-muted-foreground mt-1">{confirmed.length} session{confirmed.length !== 1 ? "s" : ""} waiting for you</p>
             </div>
-          ) : bookings.length === 0 ? (
-            <div className="p-16 text-center text-muted-foreground">
-              <CalendarDays className="w-10 h-10 mx-auto mb-3 opacity-30" />
-              <p className="font-medium">No sessions yet</p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {confirmed.map((booking: any) => (
+              <SessionCard
+                key={booking.id}
+                booking={booking}
+                completing={completing}
+                cancelling={cancelling}
+                onComplete={complete}
+                onCancel={cancel}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Completed Sessions Section */}
+      {completed.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold">Completed Sessions</h2>
+              <p className="text-sm text-muted-foreground mt-1">{completed.length} session{completed.length !== 1 ? "s" : ""} completed</p>
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {bookings.map((booking: any) => (
-                  <TableRow key={booking.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={booking.Student.image ?? ""} />
-                          <AvatarFallback>{booking.Student.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium text-sm">{booking.Student.name}</p>
-                          <p className="text-xs text-muted-foreground">{booking.Student.email}</p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{format(new Date(booking.startTime), "PPP")}</TableCell>
-                    <TableCell>
-                      {format(new Date(booking.startTime), "p")} –{" "}
-                      {format(new Date(booking.endTime), "p")}
-                    </TableCell>
-                    <TableCell>${booking.totalPrice}</TableCell>
-                    <TableCell>
-                      <Badge variant={statusVariant[booking.status]}>
-                        {booking.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {booking.status === "confirmed" && (
-                        <div className="flex items-center justify-end gap-2">
-                          {/* Add/Edit meeting link */}
-                          <MeetingLinkDialog
-                            bookingId={booking.id}
-                            currentLink={booking.meetingLink}
-                          />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {completed.map((booking: any) => (
+              <SessionCard
+                key={booking.id}
+                booking={booking}
+                completing={completing}
+                cancelling={cancelling}
+                onComplete={complete}
+                onCancel={cancel}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
-                          {/* Mark complete */}
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="outline" className="text-green-600 border-green-200 hover:bg-green-50">
-                                Complete
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Mark as completed?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This will mark the session with {booking.Student.name} as completed.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => complete(booking.id)} disabled={completing}>
-                                  Yes, complete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+      {/* Empty State */}
+      {isLoading === false && bookings.length === 0 && (
+        <div className="rounded-2xl border border-dashed bg-card p-16 text-center">
+          <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+            <CalendarDays className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <p className="text-lg font-semibold text-foreground mt-4">No sessions yet</p>
+          <p className="text-muted-foreground mt-2">Start by telling students about your availability</p>
+          <Button className="mt-6 rounded-lg gap-2">
+            <Calendar className="w-4 h-4" />
+            Update Availability
+          </Button>
+        </div>
+      )}
 
-                          {/* Cancel */}
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
-                                Cancel
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Cancel this session?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This will cancel the session with {booking.Student.name}. Cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Keep it</AlertDialogCancel>
-                                <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={() => cancel(booking.id)} disabled={cancelling}>
-                                  Yes, cancel
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-64 w-full rounded-2xl" />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
