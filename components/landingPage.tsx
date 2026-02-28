@@ -561,7 +561,7 @@ export default async function LandingPage() {
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="lg" variant="outline" className="rounded-full px-10 h-14 text-base border-white/30 text-white hover:bg-white/10 gap-2">
+              <Button size="lg" variant="outline" className="rounded-full px-10 h-14 text-base   hover:bg-white/10 gap-2">
                 Sign Up Free
               </Button>
             </Link>

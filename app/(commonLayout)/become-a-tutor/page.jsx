@@ -70,7 +70,7 @@ export default function BecomeATutorPage() {
                   </Button>
                 </Link>
                 <Link href="/how-it-works">
-                  <Button size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white hover:bg-white/10">
+                  <Button size="lg" variant="outline" className="rounded-full px-8 border-white/30  hover:bg-white/10">
                     How It Works
                   </Button>
                 </Link>
@@ -250,7 +250,7 @@ export default function BecomeATutorPage() {
               </Button>
             </Link>
             <Link href="/tutors">
-              <Button size="lg" variant="outline" className="rounded-full px-10 h-14 text-base border-white/30 text-white hover:bg-white/10 gap-2">
+              <Button size="lg" variant="outline" className="rounded-full px-10 h-14 text-base border-white/30  hover:bg-white/10 gap-2">
                 <BookOpen className="w-4 h-4" />
                 Browse Existing Tutors
               </Button>

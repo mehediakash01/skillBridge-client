@@ -269,7 +269,7 @@ export default function HowItWorksPage() {
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="rounded-full px-8 border-white/30  hover:bg-white/10">
                 Sign Up Free
               </Button>
             </Link>

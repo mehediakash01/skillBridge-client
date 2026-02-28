@@ -37,7 +37,7 @@ const SUBJECTS = ["Mathematics", "Physics", "Chemistry", "English", "Programming
 
 export default function Footer() {
   return (
-    <footer className="bg-foreground text-background" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <footer className=" bg-muted/30 " style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,900;1,9..144,300&family=DM+Sans:wght@400;500;600&display=swap');`}</style>
 
       {/* ── Top CTA strip ─────────────────────────────── */}
@@ -48,14 +48,14 @@ export default function Footer() {
               <p className="font-bold text-lg" style={{ fontFamily: "'Fraunces', serif" }}>
                 Ready to start learning?
               </p>
-              <p className="text-background/60 text-sm mt-0.5">
+              <p className=" text-sm mt-0.5">
                 Join thousands of students already on SkillBridge.
               </p>
             </div>
             <div className="flex gap-3 shrink-0">
               <Link
                 href="/tutors"
-                className="px-5 py-2.5 rounded-xl bg-white text-foreground text-sm font-semibold hover:bg-white/90 transition-colors"
+                className="px-5 py-2.5 rounded-xl  text-sm font-semibold bg-secondary/80 transition-colors"
               >
                 Browse Tutors
               </Link>
@@ -78,16 +78,16 @@ export default function Footer() {
           <div className="col-span-2 space-y-5">
             <Link href="/" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-primary-foreground" />
+                <GraduationCap className="w-5 h-5 " />
               </div>
               <span
-                className="text-xl font-black text-background"
+                className="text-xl font-black "
                 style={{ fontFamily: "'Fraunces', serif" }}
               >
                 SkillBridge
               </span>
             </Link>
-            <p className="text-background/60 text-sm leading-relaxed max-w-xs">
+            <p className=" text-sm leading-relaxed max-w-xs">
               The modern platform connecting ambitious students with expert tutors for live 1-on-1 sessions. Learn anything, on your schedule.
             </p>
 
@@ -98,7 +98,7 @@ export default function Footer() {
                 { icon: Phone, text: "+1 (555) 000-0000" },
                 { icon: MapPin, text: "Remote-first · Global" },
               ].map(({ icon: Icon, text }) => (
-                <div key={text} className="flex items-center gap-2.5 text-xs text-background/50">
+                <div key={text} className="flex items-center gap-2.5 text-xs ">
                   <Icon className="w-3.5 h-3.5 shrink-0" />
                   {text}
                 </div>
@@ -114,7 +114,7 @@ export default function Footer() {
                   aria-label={label}
                   className="w-9 h-9 rounded-xl bg-white/8 hover:bg-white/15 flex items-center justify-center transition-colors"
                 >
-                  <Icon className="w-4 h-4 text-background/70" />
+                  <Icon className="w-4 h-4 " />
                 </a>
               ))}
             </div>
@@ -123,7 +123,7 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(FOOTER_LINKS).map(([title, links]) => (
             <div key={title}>
-              <p className="text-xs font-bold uppercase tracking-widest text-background/40 mb-5">
+              <p className="text-xs font-bold uppercase tracking-widest  mb-5">
                 {title}
               </p>
               <ul className="space-y-3">
@@ -131,7 +131,7 @@ export default function Footer() {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-background/60 hover:text-background transition-colors"
+                      className="text-sm   transition-colors"
                     >
                       {label}
                     </Link>
@@ -144,7 +144,7 @@ export default function Footer() {
 
         {/* Popular subjects */}
         <div className="mt-12 pt-8 border-t border-white/10">
-          <p className="text-xs font-bold uppercase tracking-widest text-background/40 mb-4">
+          <p className="text-xs font-bold uppercase tracking-widest  mb-4">
             Popular Subjects
           </p>
           <div className="flex flex-wrap gap-2">
@@ -152,7 +152,7 @@ export default function Footer() {
               <Link
                 key={s}
                 href="/tutors"
-                className="text-xs px-3 py-1.5 rounded-full bg-white/8 text-background/60 hover:bg-white/15 hover:text-background transition-colors"
+                className="text-xs px-3 py-1.5 rounded-full bg-white/8  hover:bg-white/15  transition-colors"
               >
                 {s}
               </Link>
@@ -164,10 +164,10 @@ export default function Footer() {
       {/* ── Bottom bar ────────────────────────────────── */}
       <div className="border-t border-white/10">
         <div className="container mx-auto max-w-7xl px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-background/40">
+          <p className="text-xs">
             © {new Date().getFullYear()} SkillBridge. All rights reserved.
           </p>
-          <div className="flex items-center gap-1 text-xs text-background/40">
+          <div className="flex items-center gap-1 text-xs ">
             <span>🌍</span>
             <span>Available worldwide · All sessions online</span>
           </div>
@@ -176,7 +176,7 @@ export default function Footer() {
               <Link
                 key={t}
                 href={`/${t.toLowerCase()}`}
-                className="text-xs text-background/40 hover:text-background/70 transition-colors"
+                className="text-xs  /70 transition-colors"
               >
                 {t}
               </Link>
