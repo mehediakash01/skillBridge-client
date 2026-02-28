@@ -87,7 +87,8 @@ export default function TutorsPage() {
 
     const params = new URLSearchParams(queryObject).toString()
     try {
-      const res = await fetch(`http://localhost:5000/api/tutors?${params}`, { cache: "no-store" })
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+      const res = await fetch(`${backendUrl}/api/tutors?${params}`, { cache: "no-store" })
       if (!res.ok) throw new Error("Failed")
       const data = await res.json()
       const result = data.data

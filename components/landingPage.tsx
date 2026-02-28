@@ -3,12 +3,12 @@ import { getTutors } from "@/src/services/tutor.service"
 import { ArrowRight, Star, BookOpen, Award, CheckCircle, Clock, Globe, Zap, Shield, ChevronRight, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-
-const BASE_URL = "http://localhost:5000/api"
+import { env } from "@/src/env"
 
 async function getCategories() {
   try {
-    const res = await fetch(`${BASE_URL}/categories`, { cache: "no-store" })
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+    const res = await fetch(`${backendUrl}/api/categories`, { cache: "no-store" })
     if (!res.ok) return []
     const data = await res.json()
     return data.data ?? []
