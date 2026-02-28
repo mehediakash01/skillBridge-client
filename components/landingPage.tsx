@@ -3,7 +3,6 @@ import { getTutors } from "@/src/services/tutor.service"
 import { ArrowRight, Star, BookOpen, Award, CheckCircle, Clock, Globe, Zap, Shield, ChevronRight, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { env } from "@/src/env"
 
 async function getCategories() {
   try {
