@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 
 async function getCategories() {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://skill-bridge-server-tau.vercel.app"
     const res = await fetch(`${backendUrl}/api/categories`, { cache: "no-store" })
     if (!res.ok) return []
     const data = await res.json()

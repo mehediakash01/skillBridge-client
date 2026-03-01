@@ -45,7 +45,7 @@ export async function getTutorById(
 }
 
 
-const BASE_URL = "http://localhost:5000/api"
+const BASE_URL = "https://skill-bridge-server-tau.vercel.app/api"
 
 export interface Category {
   id: number

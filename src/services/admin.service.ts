@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000/api/admin"
+const BASE_URL = "https://skill-bridge-server-tau.vercel.app/api/admin"
 
 export interface AdminUser {
   id: string
@@ -92,14 +92,14 @@ export const getAdminBookings = async (): Promise<AdminBooking[]> => {
 // ── Categories ────────────────────────────────────────────
 
 export const getAdminCategories = async (): Promise<Category[]> => {
-  const res = await fetch(`http://localhost:5000/api/categories`, { credentials: "include" })
+  const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/categories`, { credentials: "include" })
   if (!res.ok) throw new Error("Failed to fetch categories")
   const data = await res.json()
   return data.data
 }
 
 export const createCategory = async (categoryName: string) => {
-  const res = await fetch(`http://localhost:5000/api/categories`, {
+  const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/categories`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",

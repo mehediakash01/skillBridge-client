@@ -6,7 +6,7 @@ export const userService ={
         try{
             const cookieStore = await cookies();
             console.log(cookieStore.toString());
-            const res = await fetch("http://localhost:5000/api/auth/get-session",{
+            const res = await fetch("https://skill-bridge-server-tau.vercel.app/api/auth/get-session",{
                 headers:{
                     Cookie:cookieStore.toString(),
                 },

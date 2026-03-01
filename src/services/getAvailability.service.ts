@@ -2,7 +2,7 @@
 
 export const getAvailability = async (tutorId: string, date: string) => {
   const res = await fetch(
-    `http://localhost:5000/api/availability/${tutorId}?date=${date}`
+    `https://skill-bridge-server-tau.vercel.app/api/availability/${tutorId}?date=${date}`
   )
 
   const data = await res.json()
