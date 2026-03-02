@@ -111,7 +111,9 @@ export default function TutorsClient({
 
     try {
       const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/tutors?${params}`, {
-        cache: "no-store",
+        cache: "no-store",  next: { revalidate: 0 },
+
+  signal: AbortSignal.timeout(15000)
       });
       if (!res.ok) throw new Error("Failed");
       const data = await res.json();

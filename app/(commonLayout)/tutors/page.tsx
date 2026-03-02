@@ -29,18 +29,28 @@ export default async function TutorsPage({
   try {
     const res = await fetch(
       `https://skill-bridge-server-tau.vercel.app/api/tutors?${query.toString()}`,
-      { cache: 'no-store' }
+
+      { cache: 'no-store', next: { revalidate: 0 },
+
+  signal: AbortSignal.timeout(15000)  }
     );
 
     if (res.ok) {
       const json = await res.json();
+      console.log('Server fetch status:', res.status);
+console.log('Server fetch full JSON:', JSON.stringify(json, null, 2));
       const data = json.data ?? {};
       initialTutors = data.data ?? [];
       initialTotalCount = data.meta?.total ?? initialTutors.length;
+      console.log('Passing to client → tutors count:', initialTutors.length, 'total:', initialTotalCount);
     }
   } catch (err) {
     console.error('Initial tutors fetch failed:', err);
   }
+  if (initialTutors.length === 0) {
+  initialTutors = [{ id: 'test-1', name: 'Test Tutor (hardcoded)' }]; // whatever TutorCard expects
+  initialTotalCount = 1;
+}
 
   return (
     <TutorsClient
