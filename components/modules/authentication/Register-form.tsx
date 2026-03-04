@@ -50,7 +50,7 @@ export function RegisterForm() {
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "https://skill-bridge-client-1h8j.vercel.app",
+      callbackURL: process.env.FRONTEND_URL || "http://localhost:3000",
     });
   };
 

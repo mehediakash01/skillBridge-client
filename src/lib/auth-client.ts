@@ -2,7 +2,7 @@ import { createAuthClient } from "better-auth/react";
 
 
 export const authClient = createAuthClient({
-  baseURL:  "https://skill-bridge-server-tau.vercel.app", 
+  baseURL:  process.env.AUTH_URL || "http://localhost:5000",
   fetchOptions: {
     credentials: "include", 
   },

@@ -43,8 +43,8 @@ export function LoginForm() {
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
-     callbackURL: "https://skill-bridge-client-1h8j.vercel.app/",
-      errorCallbackURL: "https://skill-bridge-client-1h8j.vercel.app/login?error=google", 
+     callbackURL: process.env.FRONTEND_URL || "http://localhost:3000",
+      errorCallbackURL: `${process.env.FRONTEND_URL || "http://localhost:3000"}/login?error=google`, 
 
     });
   };

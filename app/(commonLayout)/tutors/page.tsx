@@ -28,7 +28,7 @@ export default async function TutorsPage({
 
   try {
     const res = await fetch(
-      `https://skill-bridge-server-tau.vercel.app/api/tutors?${query.toString()}`,
+      `${process.env.API_URL || "https://skill-bridge-server-tau.vercel.app/api"}/tutors?${query.toString()}`,
 
       { cache: 'no-store', next: { revalidate: 0 },
 

@@ -439,6 +439,6 @@ This project is licensed under the **MIT License**.
 
 Made with ❤️ by Mehedi Hasan Akash
 
-[Live Demo](https://skill-bridge-client-1h8j.vercel.app) · [Report Bug](https://github.com/your-username/skill-bridge-server/issues) · [Request Feature](https://github.com/your-username/skill-bridge-server/issues)
+[Live Demo](https://skill-bridge-client-ex6c.vercel.app) · [Report Bug](https://github.com/your-username/skill-bridge-server/issues) · [Request Feature](https://github.com/your-username/skill-bridge-server/issues)
 
 </div>

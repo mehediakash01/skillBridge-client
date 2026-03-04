@@ -110,7 +110,7 @@ export default function TutorsClient({
     const params = new URLSearchParams(queryObject).toString();
 
     try {
-      const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/tutors?${params}`, {
+      const res = await fetch(`${process.env.API_URL || "https://skill-bridge-server-tau.vercel.app/api"}/tutors?${params}`, {
         cache: "no-store",  next: { revalidate: 0 },
 
   signal: AbortSignal.timeout(15000)
