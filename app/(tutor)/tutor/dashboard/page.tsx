@@ -24,7 +24,7 @@ import {
   DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog"
 
-const BASE_URL = "https://skill-bridge-server-tau.vercel.app/api"
+const BASE_URL = process.env.API_URL || "https://skill-bridge-server-tau.vercel.app/api"
 
 const statusVariant: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   confirmed: "default",
