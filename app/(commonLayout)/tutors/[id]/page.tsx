@@ -2,7 +2,8 @@ import BookingForm from "@/components/modules/bookings/BookingForm"
 import { getTutorById } from "@/src/services/tutor.service"
 import {
   Star, Clock, BookOpen, Award, Users,
-  CheckCircle, MessageSquare, ArrowLeft, Shield
+  CheckCircle, MessageSquare, ArrowLeft, Shield,
+  Target, CalendarDays, Link2, XCircle, RefreshCw, Calendar
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -220,6 +221,73 @@ export default async function TutorDetailsPage({ params }: Props) {
               </Card>
             )}
 
+            {/* Teaching Schedule */}
+            {(tutor.availabilities?.length ?? 0) > 0 && (() => {
+              const DAY_ORDER = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const
+              const DAY_LABELS: Record<string, string> = {
+                mon: "Monday", tue: "Tuesday", wed: "Wednesday",
+                thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday",
+              }
+              const DAY_SHORT: Record<string, string> = {
+                mon: "Mon", tue: "Tue", wed: "Wed",
+                thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun",
+              }
+              const activeDays = new Set(tutor.availabilities.map((a: any) => a.dayOfWeek))
+              const grouped: Record<string, { startTime: string; endTime: string }[]> = {}
+              for (const a of tutor.availabilities) {
+                if (!grouped[a.dayOfWeek]) grouped[a.dayOfWeek] = []
+                grouped[a.dayOfWeek].push({ startTime: a.startTime, endTime: a.endTime })
+              }
+              const fmt = (t: string) => {
+                const [h, m] = t.split(":").map(Number)
+                const ampm = h >= 12 ? "PM" : "AM"
+                const hour = h % 12 || 12
+                return `${hour}:${String(m).padStart(2, "0")} ${ampm}`
+              }
+              return (
+                <Card className="overflow-hidden">
+                  <div className="h-1 bg-linear-to-r from-indigo-400 to-violet-500" />
+                  <CardContent className="pt-6 pb-6">
+                    <h2 className="font-bold text-base mb-4 flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-indigo-600" />
+                      Teaching Schedule
+                    </h2>
+                    {/* Day pills */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {DAY_ORDER.map((day) => (
+                        <span
+                          key={day}
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
+                            activeDays.has(day)
+                              ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                              : "bg-muted/40 text-muted-foreground/40 border-muted line-through"
+                          }`}
+                        >
+                          {DAY_SHORT[day]}
+                        </span>
+                      ))}
+                    </div>
+                    {/* Time slots per active day */}
+                    <div className="grid sm:grid-cols-2 gap-2">
+                      {DAY_ORDER.filter((d) => activeDays.has(d)).map((day) => (
+                        <div key={day} className="rounded-xl border bg-muted/30 px-3 py-2.5">
+                          <p className="text-xs font-bold text-indigo-700 mb-1">{DAY_LABELS[day]}</p>
+                          <div className="space-y-0.5">
+                            {grouped[day].map((slot, i) => (
+                              <p key={i} className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Clock className="w-3 h-3 shrink-0" />
+                                {fmt(slot.startTime)} – {fmt(slot.endTime)}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })()}
+
             {/* What to expect */}
             <Card className="overflow-hidden">
               <div className="h-1 bg-linear-to-r from-green-400 to-emerald-500" />
@@ -229,19 +297,21 @@ export default async function TutorDetailsPage({ params }: Props) {
                   What to Expect
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-3">
-                  {[
-                    { icon: "🎯", title: "1-on-1 session", desc: "Fully personalized, just you and the tutor" },
-                    { icon: "📅", title: "Flexible timing", desc: "Pick from the tutor's available slots" },
-                    { icon: "🔗", title: "Video meeting link", desc: "Tutor shares a link before the session" },
-                    { icon: "⭐", title: "Leave a review", desc: "Rate your session after attending" },
-                    { icon: "❌", title: "Cancel anytime", desc: "Free cancellation before link is shared" },
-                    { icon: "🔄", title: "Book again", desc: "Easily rebook your favourite tutors" },
-                  ].map((item, i) => (
+                  {([
+                    { Icon: Target,      title: "1-on-1 session",     desc: "Fully personalized, just you and the tutor",    color: "text-violet-600 bg-violet-50" },
+                    { Icon: CalendarDays,title: "Flexible timing",    desc: "Pick from the tutor's available slots",        color: "text-blue-600 bg-blue-50" },
+                    { Icon: Link2,       title: "Video meeting link", desc: "Tutor shares a link before the session",       color: "text-sky-600 bg-sky-50" },
+                    { Icon: Star,        title: "Leave a review",     desc: "Rate your session after attending",           color: "text-yellow-600 bg-yellow-50" },
+                    { Icon: XCircle,     title: "Cancel anytime",     desc: "Free cancellation before link is shared",     color: "text-red-500 bg-red-50" },
+                    { Icon: RefreshCw,   title: "Book again",         desc: "Easily rebook your favourite tutors",         color: "text-green-600 bg-green-50" },
+                  ] as const).map(({ Icon, title, desc, color }, i) => (
                     <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-muted/40 hover:bg-muted/70 transition-colors">
-                      <span className="text-xl shrink-0">{item.icon}</span>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${color}`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
                       <div>
-                        <p className="text-sm font-semibold">{item.title}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+                        <p className="text-sm font-semibold">{title}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
                       </div>
                     </div>
                   ))}
