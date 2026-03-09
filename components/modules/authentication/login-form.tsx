@@ -41,11 +41,14 @@ export function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleGoogleLogin = async () => {
+    const frontendOrigin =
+      process.env.NEXT_PUBLIC_FRONTEND_URL ||
+      (typeof window !== "undefined" ? window.location.origin : "");
+
     await authClient.signIn.social({
       provider: "google",
-     callbackURL: process.env.FRONTEND_URL || "https://skill-bridge-client-1h8j.vercel.app",
-      errorCallbackURL: `${process.env.FRONTEND_URL || "https://skill-bridge-client-1h8j.vercel.app"}/login?error=google`, 
-
+      callbackURL: `${frontendOrigin}/dashboard`,
+      errorCallbackURL: `${frontendOrigin}/login?error=google`,
     });
   };
 
