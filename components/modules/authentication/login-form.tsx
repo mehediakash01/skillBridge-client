@@ -43,7 +43,7 @@ export function LoginForm() {
   const handleGoogleLogin = async () => {
     const frontendOrigin =
       process.env.NEXT_PUBLIC_FRONTEND_URL ||
-      (typeof window !== "undefined" ? window.location.origin : "");
+      "https://skill-bridge-client-sage.vercel.app";
 
     await authClient.signIn.social({
       provider: "google",
