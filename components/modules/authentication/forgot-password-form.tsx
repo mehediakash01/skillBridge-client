@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/src/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -37,17 +36,26 @@ export function ForgotPasswordForm() {
       setIsSubmitting(true);
       const toastId = toast.loading("Sending reset link…");
       try {
+        const backendUrl =
+          process.env.NEXT_PUBLIC_BACKEND_URL ||
+          "https://skill-bridge-server-tau.vercel.app";
         const frontendOrigin =
           process.env.NEXT_PUBLIC_FRONTEND_URL ||
           "https://skill-bridge-client-sage.vercel.app";
 
-        const { error } = await authClient.forgetPassword({
-          email: value.email,
-          redirectTo: `${frontendOrigin}/reset-password`,
+        const res = await fetch(`${backendUrl}/api/auth/forget-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            email: value.email,
+            redirectTo: `${frontendOrigin}/reset-password`,
+          }),
         });
 
-        if (error) {
-          toast.error(error.message, { id: toastId });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          toast.error((data as { message?: string }).message ?? "Failed to send reset link.", { id: toastId });
         } else {
           toast.success("Reset link sent!", { id: toastId });
           setSentToEmail(value.email);
