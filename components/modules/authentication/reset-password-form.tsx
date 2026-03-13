@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/src/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -54,12 +53,18 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       setIsSubmitting(true);
       const toastId = toast.loading("Resetting your password…");
       try {
-        const { error } = await authClient.resetPassword({
-          newPassword: value.password,
-          token,
+        const res = await fetch("/api/auth/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            newPassword: value.password,
+            token,
+          }),
         });
-        if (error) {
-          toast.error(error.message, { id: toastId });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          toast.error((data as { message?: string }).message ?? "Failed to reset password.", { id: toastId });
         } else {
           toast.success("Password reset successfully!", { id: toastId });
           setIsSuccess(true);

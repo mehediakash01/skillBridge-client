@@ -36,17 +36,13 @@ export function ForgotPasswordForm() {
       setIsSubmitting(true);
       const toastId = toast.loading("Sending reset link…");
       try {
-        const backendUrl =
-          process.env.NEXT_PUBLIC_BACKEND_URL ||
-          "https://skill-bridge-server-tau.vercel.app";
         const frontendOrigin =
           process.env.NEXT_PUBLIC_FRONTEND_URL ||
           "https://skill-bridge-client-sage.vercel.app";
 
-        const res = await fetch(`${backendUrl}/api/auth/forget-password`, {
+        const res = await fetch("/api/auth/forget-password", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({
             email: value.email,
             redirectTo: `${frontendOrigin}/reset-password`,
