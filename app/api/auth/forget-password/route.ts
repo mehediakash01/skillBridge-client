@@ -8,7 +8,7 @@ function getBackendBaseUrl() {
 
 export async function POST(request: NextRequest) {
   const payload = await request.text();
-  const upstream = await fetch(`${getBackendBaseUrl()}/api/auth/forget-password`, {
+  const upstream = await fetch(`${getBackendBaseUrl()}/api/auth/request-password-reset`, {
     method: "POST",
     headers: {
       "content-type": request.headers.get("content-type") ?? "application/json",
