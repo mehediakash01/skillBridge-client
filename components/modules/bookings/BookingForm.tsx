@@ -80,8 +80,8 @@ export default function BookingForm({ tutorId }: Props) {
       setLoading(true)
       await createBooking({
         tutorId,
-        startTime: new Date(selectedSlot.startTime).toISOString(),
-        endTime: new Date(selectedSlot.endTime).toISOString(),
+        startTime: selectedSlot.startTime,
+        endTime: selectedSlot.endTime,
         note,
       })
 

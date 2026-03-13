@@ -8,7 +8,7 @@ import {
   submitReview,
   type Booking,
 } from "@/src/services/booking.service"
-import { format } from "date-fns"
+import { formatBookingDateUTC, formatBookingRangeUTC } from "@/src/lib/booking-time"
 import { toast } from "sonner"
 import { Star, ExternalLink, Loader2, CalendarDays, VideoOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -129,9 +129,8 @@ function ReviewDialog({ booking }: { booking: Booking }) {
           <div className="bg-muted/50 rounded-lg p-3">
             <p className="font-medium text-sm">{booking.Tutor.bio}</p>
             <p className="text-xs text-muted-foreground mt-1">
-              {format(new Date(booking.startTime), "PPP")} ·{" "}
-              {format(new Date(booking.startTime), "p")} –{" "}
-              {format(new Date(booking.endTime), "p")}
+              {formatBookingDateUTC(booking.startTime)} ·{" "}
+              {formatBookingRangeUTC(booking.startTime, booking.endTime)}
             </p>
           </div>
 
@@ -286,9 +285,8 @@ function BookingActions({
             <AlertDialogHeader>
               <AlertDialogTitle>Cancel this booking?</AlertDialogTitle>
               <AlertDialogDescription>
-                Your session on {format(new Date(booking.startTime), "PPP")} from{" "}
-                {format(new Date(booking.startTime), "p")} to{" "}
-                {format(new Date(booking.endTime), "p")} will be cancelled.
+                Your session on {formatBookingDateUTC(booking.startTime)} from{" "}
+                {formatBookingRangeUTC(booking.startTime, booking.endTime)} will be cancelled.
                 This cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -398,10 +396,9 @@ export default function BookingsPage() {
                 {bookings.map((booking) => (
                   <TableRow key={booking.id}>
                     <TableCell className="font-medium">{booking.Tutor.bio}</TableCell>
-                    <TableCell>{format(new Date(booking.startTime), "PPP")}</TableCell>
+                    <TableCell>{formatBookingDateUTC(booking.startTime)}</TableCell>
                     <TableCell className="text-sm">
-                      {format(new Date(booking.startTime), "p")} –{" "}
-                      {format(new Date(booking.endTime), "p")}
+                      {formatBookingRangeUTC(booking.startTime, booking.endTime)}
                     </TableCell>
                     <TableCell className="font-medium">${booking.totalPrice}</TableCell>
                     <TableCell>

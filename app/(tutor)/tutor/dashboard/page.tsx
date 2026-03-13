@@ -4,7 +4,8 @@ import { useState } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getTutorBookings, completeBooking } from "@/src/services/tutor.service"
 import { cancelBooking } from "@/src/services/booking.service"
-import { format, differenceInDays, isPast } from "date-fns"
+import { differenceInDays, isPast } from "date-fns"
+import { formatBookingDateUTC, formatBookingRangeUTC } from "@/src/lib/booking-time"
 import { toast } from "sonner"
 import { CalendarDays, CheckCircle2, Clock, Link2, Loader2, User, DollarSign, TrendingUp, AlertCircle, Video, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -141,14 +142,14 @@ function SessionCard({ booking, completing, cancelling, onComplete, onCancel }: 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-xs text-muted-foreground font-medium mb-1">Date</p>
-            <p className="text-sm font-medium">{format(new Date(booking.startTime), "MMM dd, yyyy")}</p>
+            <p className="text-sm font-medium">{formatBookingDateUTC(booking.startTime)}</p>
             {nextSession && daysUntil >= 0 && (
               <p className="text-xs text-blue-600 mt-1">{daysUntil === 0 ? "Today" : `In ${daysUntil} days`}</p>
             )}
           </div>
           <div>
             <p className="text-xs text-muted-foreground font-medium mb-1">Time</p>
-            <p className="text-sm font-medium">{format(new Date(booking.startTime), "h:mm a")} - {format(new Date(booking.endTime), "h:mm a")}</p>
+            <p className="text-sm font-medium">{formatBookingRangeUTC(booking.startTime, booking.endTime)}</p>
           </div>
         </div>
 

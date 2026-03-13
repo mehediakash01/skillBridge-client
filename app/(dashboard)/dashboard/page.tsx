@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query"
 import { getMyBookings } from "@/src/services/booking.service"
 import { useSession } from "@/src/hooks/useSession"
 import { CalendarDays, CheckCircle, Clock, XCircle } from "lucide-react"
-import { format } from "date-fns"
 import Link from "next/link"
+import { formatBookingDateUTC, formatBookingRangeUTC } from "@/src/lib/booking-time"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -123,9 +123,8 @@ export default function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{booking.Tutor.bio}</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(booking.startTime), "PPP")} ·{" "}
-                      {format(new Date(booking.startTime), "p")} –{" "}
-                      {format(new Date(booking.endTime), "p")}
+                      {formatBookingDateUTC(booking.startTime)} ·{" "}
+                      {formatBookingRangeUTC(booking.startTime, booking.endTime)}
                     </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
