@@ -8,11 +8,15 @@ function getBackendBaseUrl() {
 
 export async function POST(request: NextRequest) {
   const payload = await request.text();
+  const forwardedOrigin = request.headers.get("origin") ?? new URL(request.url).origin;
   const upstream = await fetch(`${getBackendBaseUrl()}/api/auth/request-password-reset`, {
     method: "POST",
     headers: {
       "content-type": request.headers.get("content-type") ?? "application/json",
       cookie: request.headers.get("cookie") ?? "",
+      origin: forwardedOrigin,
+      referer: request.headers.get("referer") ?? `${forwardedOrigin}/`,
+      "user-agent": request.headers.get("user-agent") ?? "nextjs-proxy",
     },
     body: payload,
     cache: "no-store",
