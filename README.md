@@ -1,6 +1,6 @@
 <div align="center">
 
-# SkillBridge
+# LearnForge
 
 ### Connect with Expert Tutors — Learn Anything, Anywhere
 
@@ -10,7 +10,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
 
-> **SkillBridge** is a full-featured online tutoring marketplace where students discover and book expert tutors, tutors manage sessions and earn income, and admins oversee the entire platform — all in one elegant, real-time dashboard experience.
+> **LearnForge** is a full-featured online tutoring marketplace where students discover and book expert tutors, tutors manage sessions and earn income, and admins oversee the entire platform — all in one elegant, real-time dashboard experience.
 
 </div>
 
@@ -326,7 +326,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 ## 🏗️ Architecture Overview
 
-SkillBridge follows the **Next.js App Router** architecture with route groups to cleanly separate concerns:
+LearnForge follows the **Next.js App Router** architecture with route groups to cleanly separate concerns:
 
 ```
 Route Groups:
@@ -389,7 +389,7 @@ Built with **shadcn/ui** and **Radix UI** primitives. Components used across the
 
 ## 🌙 Theming
 
-SkillBridge supports **Light**, **Dark**, and **System** modes via `next-themes`. The theme toggle is accessible from the Navbar on every page.
+LearnForge supports **Light**, **Dark**, and **System** modes via `next-themes`. The theme toggle is accessible from the Navbar on every page.
 
 ---
 

@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { GraduationCap, Twitter, Linkedin, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react"
+import Image from "next/image"
+import { Twitter, Linkedin, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 const FOOTER_LINKS = {
@@ -49,7 +50,7 @@ export default function Footer() {
                 Ready to start learning?
               </p>
               <p className=" text-sm mt-0.5">
-                Join thousands of students already on SkillBridge.
+                Join thousands of students already on LearnForge.
               </p>
             </div>
             <div className="flex gap-3 shrink-0">
@@ -77,14 +78,11 @@ export default function Footer() {
           {/* Brand col */}
           <div className="col-span-2 space-y-5">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 " />
+              <div className="p-1 bg-white rounded-lg">
+                <Image src="/ForgeLogo.png" alt="LearnForge" width={40} height={40} className="w-10 h-10" />
               </div>
-              <span
-                className="text-xl font-black "
-                style={{ fontFamily: "'Fraunces', serif" }}
-              >
-                SkillBridge
+              <span className="text-lg font-black" style={{ fontFamily: "'Fraunces', serif" }}>
+                LearnForge
               </span>
             </Link>
             <p className=" text-sm leading-relaxed max-w-xs">
@@ -94,7 +92,7 @@ export default function Footer() {
             {/* Contact info */}
             <div className="space-y-2">
               {[
-                { icon: Mail, text: "hello@skillbridge.com" },
+                { icon: Mail, text: "hello@learnforge.com" },
                 { icon: Phone, text: "+1 (555) 000-0000" },
                 { icon: MapPin, text: "Remote-first · Global" },
               ].map(({ icon: Icon, text }) => (
@@ -165,7 +163,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container mx-auto max-w-7xl px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs">
-            © {new Date().getFullYear()} SkillBridge. All rights reserved.
+            © {new Date().getFullYear()} LearnForge. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-xs ">
             <span>🌍</span>

@@ -79,7 +79,7 @@ export default function ProfilePage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">My Profile</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Manage how you appear on SkillBridge
+          Manage how you appear on LearnForge
         </p>
       </div>
 

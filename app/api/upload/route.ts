@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(base64, {
-      folder: "skillbridge/avatars",
+      folder: "learnforge/avatars",
       transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],
     })
 

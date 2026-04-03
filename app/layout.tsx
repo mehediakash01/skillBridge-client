@@ -12,11 +12,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SkillBridge - Connect with Expert Tutors, Learn Anything",
+  title: "LearnForge - Connect with Expert Tutors, Learn Anything",
   description:
     "Browse expert tutors, book sessions instantly, and grow your skills with personalized learning.",
   keywords:
-    "tutors, online tutoring, learn anything, skillbridge, education platform",
+    "tutors, online tutoring, learn anything, learnforge, education platform",
+  icons: {
+    icon: "/ForgeLogo.png",
+    apple: "/ForgeLogo.png",
+  },
 };
 
 export default function RootLayout({

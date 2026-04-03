@@ -66,7 +66,7 @@ const STEPS_TUTOR = [
 ]
 
 const FAQS = [
-  { q: "Do I need to subscribe to book sessions?", a: "No. SkillBridge is completely free to join. You only pay for sessions you book, at the tutor's stated hourly rate." },
+  { q: "Do I need to subscribe to book sessions?", a: "No. LearnForge is completely free to join. You only pay for sessions you book, at the tutor's stated hourly rate." },
   { q: "Can I cancel a booking?", a: "Yes. You can cancel a confirmed booking for free as long as the tutor hasn't added a meeting link yet." },
   { q: "What video platform do sessions use?", a: "Tutors provide their own meeting link — usually Google Meet or Zoom. You join directly from the 'Join Session' button in your dashboard." },
   { q: "How do I know a tutor is good?", a: "Every tutor builds a public rating from real student reviews. You can see their average score and read individual comments before booking." },
@@ -260,7 +260,7 @@ export default function HowItWorksPage() {
             Ready to start?
           </h2>
           <p className="text-primary-foreground/70 mb-8 leading-relaxed">
-            Join thousands of students and tutors already on SkillBridge. Sign up free, no subscription required.
+            Join thousands of students and tutors already on LearnForge. Sign up free, no subscription required.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/tutors">

@@ -437,13 +437,13 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 6. WHY SKILLBRIDGE ───────────────────────────── */}
+      {/* ── 6. WHY LEARNFORGE ───────────────────────────── */}
       <section className="py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-accent/5" />
         <div className="container mx-auto max-w-6xl px-4 relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <Badge variant="secondary" className="mb-4 rounded-full px-4">Why SkillBridge</Badge>
+              <Badge variant="secondary" className="mb-4 rounded-full px-4">Why LearnForge</Badge>
               <h2 className="font-display text-5xl font-black mb-6 leading-tight">
                 Everything You Need
                 <span className="italic font-light block">to Learn Better</span>
@@ -550,7 +550,7 @@ export default async function LandingPage() {
             <span className="italic font-light block opacity-80">is One Session Away</span>
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Join thousands of students already learning smarter with SkillBridge. Find your tutor today — no commitment required.
+            Join thousands of students already learning smarter with LearnForge. Find your tutor today — no commitment required.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/tutors">

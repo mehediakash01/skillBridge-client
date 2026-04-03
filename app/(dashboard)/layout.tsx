@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 import {
@@ -38,12 +39,12 @@ function SidebarContent({
       {/* ── Logo ─────────────────────────────────── */}
       <div className="px-5 py-5 flex items-center justify-between shrink-0">
         <Link href="/" onClick={onClose} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
-            <GraduationCap className="w-4 h-4 text-primary-foreground" />
+          <div className="p-1 bg-white rounded-lg">
+            <Image src="/ForgeLogo.png" alt="LearnForge" width={40} height={40} className="w-10 h-10" />
           </div>
           <div>
             <p className="font-black text-sm leading-none" style={{ fontFamily: "'Fraunces', serif" }}>
-              SkillBridge
+              LearnForge
             </p>
             <p className="text-[10px] text-muted-foreground mt-0.5 font-medium">Student Portal</p>
           </div>

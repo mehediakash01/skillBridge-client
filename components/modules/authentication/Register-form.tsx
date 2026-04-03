@@ -8,6 +8,7 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import Link from "next/link";
+import Image from "next/image";
 import { Eye, EyeOff, ArrowRight, GraduationCap, BookOpen, Users, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/src/lib/utils";
@@ -70,7 +71,7 @@ export function RegisterForm() {
         if (error) {
           toast.error(error.message, { id: toastId });
         } else {
-          toast.success("Account created! Welcome to SkillBridge 🎉", { id: toastId });
+          toast.success("Account created! Welcome to LearnForge 🎉", { id: toastId });
           router.push("/"); 
         }
       } catch {
@@ -100,12 +101,12 @@ export function RegisterForm() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-2.5 relative"
+          className="flex items-center gap-3 relative"
         >
-          <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
-            <GraduationCap className="w-5 h-5 text-white" />
+          <div className="p-1.5 bg-white rounded-lg">
+            <Image src="/ForgeLogo.png" alt="LearnForge" width={44} height={44} className="w-11 h-11" />
           </div>
-          <span className="text-white font-bold text-xl tracking-tight">SkillBridge</span>
+          <span className="text-white font-bold text-xl tracking-tight">LearnForge</span>
         </motion.div>
 
         {/* Main copy — changes based on role */}
@@ -116,7 +117,7 @@ export function RegisterForm() {
             transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <p className="text-white/60 text-sm font-medium uppercase tracking-widest mb-4">
-              Join SkillBridge
+              Join LearnForge
             </p>
             <AnimatePresence mode="wait">
               <motion.h2
@@ -222,10 +223,10 @@ export function RegisterForm() {
             transition={{ duration: 0.4 }}
             className="lg:hidden flex items-center gap-2 mb-8"
           >
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
-              <GraduationCap className="w-4 h-4 text-primary-foreground" />
+            <div className="p-1 bg-white rounded-lg">
+              <Image src="/ForgeLogo.png" alt="LearnForge" width={32} height={32} className="w-8 h-8" />
             </div>
-            <span className="font-bold text-lg">SkillBridge</span>
+            <span className="font-bold text-lg">LearnForge</span>
           </motion.div>
 
           {/* Header */}

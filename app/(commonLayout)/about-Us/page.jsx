@@ -26,7 +26,7 @@ const VALUES = [
   {
     icon: Shield,
     title: "Trust & Transparency",
-    desc: "No hidden fees, no fake reviews. Tutors set real rates. Students leave real feedback. Everything on SkillBridge is honest, open, and accountable.",
+    desc: "No hidden fees, no fake reviews. Tutors set real rates. Students leave real feedback. Everything on LearnForge is honest, open, and accountable.",
     color: "bg-green-50 text-green-600",
   },
   {
@@ -50,17 +50,17 @@ const VALUES = [
 ]
 
 const MILESTONES = [
-  { year: "2022", title: "SkillBridge Founded", desc: "Started with a simple idea: connect students directly with real experts, with no middlemen and no fluff." },
+  { year: "2022", title: "LearnForge Founded", desc: "Started with a simple idea: connect students directly with real experts, with no middlemen and no fluff." },
   { year: "2023", title: "First 100 Tutors", desc: "Reached our first hundred verified tutors across mathematics, sciences, and programming subjects." },
   { year: "2023", title: "1,000 Sessions Milestone", desc: "Celebrated the platform's first thousand completed student sessions with an average rating of 4.8 stars." },
-  { year: "2024", title: "Global Expansion", desc: "Students and tutors from over 30 countries started using SkillBridge for live online learning sessions." },
+  { year: "2024", title: "Global Expansion", desc: "Students and tutors from over 30 countries started using LearnForge for live online learning sessions." },
   { year: "2025", title: "10,000+ Sessions", desc: "Crossed ten thousand completed sessions and launched the admin platform, tutor profiles, and review system." },
   { year: "2026", title: "Platform 2.0", desc: "Full redesign, meeting link integration, real-time availability, and a dramatically improved booking experience." },
 ]
 
 const TEAM = [
   { name: "Alex Morgan", role: "Co-Founder & CEO", bio: "Former educator and EdTech founder. Passionate about removing barriers to quality education worldwide.", initials: "AM", color: "from-blue-400 to-blue-600" },
-  { name: "Sofia Chen", role: "Co-Founder & CTO", bio: "Full-stack engineer with 10+ years experience. Built SkillBridge's platform from the ground up.", initials: "SC", color: "from-violet-400 to-violet-600" },
+  { name: "Sofia Chen", role: "Co-Founder & CTO", bio: "Full-stack engineer with 10+ years experience. Built LearnForge's platform from the ground up.", initials: "SC", color: "from-violet-400 to-violet-600" },
   { name: "James Okafor", role: "Head of Tutors", bio: "Ex-teacher turned product lead. Ensures every tutor on our platform delivers an exceptional experience.", initials: "JO", color: "from-green-400 to-green-600" },
   { name: "Priya Nair", role: "Head of Design", bio: "UX designer focused on making complex workflows feel effortless. If it's beautiful here, it's Priya.", initials: "PN", color: "from-rose-400 to-rose-600" },
 ]
@@ -88,7 +88,7 @@ export default function AboutPage() {
         </div>
 
         <div className="container mx-auto max-w-4xl px-4 text-center relative">
-          <Badge variant="secondary" className="mb-6 rounded-full px-4">About SkillBridge</Badge>
+          <Badge variant="secondary" className="mb-6 rounded-full px-4">About LearnForge</Badge>
           <h1
             className="text-6xl lg:text-7xl font-black leading-[1.02] mb-6 tracking-tight"
             style={{ fontFamily: "'Fraunces', serif" }}
@@ -99,7 +99,7 @@ export default function AboutPage() {
             </span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-            SkillBridge is an online tutoring platform built on a simple belief — every student deserves direct access to a real expert, not a pre-recorded video or a crowded classroom. We make that possible.
+            LearnForge is an online tutoring platform built on a simple belief — every student deserves direct access to a real expert, not a pre-recorded video or a crowded classroom. We make that possible.
           </p>
         </div>
       </section>
@@ -135,7 +135,7 @@ export default function AboutPage() {
                 For too long, quality tutoring has been reserved for students who could afford premium agencies or happened to live near the right people. Geography, budget, and circumstance shouldn't determine who gets a great education.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                SkillBridge removes those barriers. By connecting students directly with independent tutors — fully online, with transparent pricing set by the tutors themselves — we create a marketplace where great teaching reaches anyone who needs it.
+                LearnForge removes those barriers. By connecting students directly with independent tutors — fully online, with transparent pricing set by the tutors themselves — we create a marketplace where great teaching reaches anyone who needs it.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 We're not just a booking tool. We're building an ecosystem where educators are respected, students are empowered, and learning is genuinely personal.
@@ -199,7 +199,7 @@ export default function AboutPage() {
       <section className="py-28 bg-background">
         <div className="container mx-auto max-w-5xl px-4">
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-5 rounded-full px-4">Why SkillBridge</Badge>
+            <Badge variant="secondary" className="mb-5 rounded-full px-4">Why LearnForge</Badge>
             <h2 className="font-display text-5xl font-black">
               Built Different,
               <span className="italic font-light"> On Purpose</span>
@@ -299,7 +299,7 @@ export default function AboutPage() {
               </div>
               <h3 className="font-display text-2xl font-black mb-3">For Students</h3>
               <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                Whether you're struggling with calculus, prepping for exams, or learning to code — you'll find a tutor on SkillBridge who's perfect for you. Real profiles, real reviews, real results.
+                Whether you're struggling with calculus, prepping for exams, or learning to code — you'll find a tutor on LearnForge who's perfect for you. Real profiles, real reviews, real results.
               </p>
               <Link href="/tutors">
                 <Button className="rounded-full gap-2">
@@ -313,7 +313,7 @@ export default function AboutPage() {
               </div>
               <h3 className="font-display text-2xl font-black text-white mb-3">For Educators</h3>
               <p className="text-primary-foreground/70 text-sm leading-relaxed mb-6">
-                If you have expertise worth sharing, SkillBridge gives you the tools to turn it into income — on your own terms. No agency cuts, no rigid contracts. Just you, your students, and your schedule.
+                If you have expertise worth sharing, LearnForge gives you the tools to turn it into income — on your own terms. No agency cuts, no rigid contracts. Just you, your students, and your schedule.
               </p>
               <Link href="/become-a-tutor">
                 <Button variant="secondary" className="rounded-full gap-2">
@@ -331,7 +331,7 @@ export default function AboutPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
         <div className="container mx-auto max-w-3xl px-4 text-center relative">
           <h2 className="font-display text-5xl font-black  mb-5">
-            Join the SkillBridge
+            Join the LearnForge
             <span className="italic font-light opacity-70 block mt-1">Community</span>
           </h2>
           <p className=" mb-10 max-w-md mx-auto leading-relaxed">

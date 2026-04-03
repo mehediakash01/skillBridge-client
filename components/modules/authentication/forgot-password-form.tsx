@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "@tanstack/react-form";
@@ -80,12 +81,12 @@ export function ForgotPasswordForm() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-2.5 relative"
+          className="flex items-center gap-3 relative"
         >
-          <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
-            <GraduationCap className="w-5 h-5 text-white" />
+          <div className="p-1.5 bg-white rounded-lg">
+            <Image src="/ForgeLogo.png" alt="LearnForge" width={44} height={44} className="w-11 h-11" />
           </div>
-          <span className="text-white font-bold text-xl tracking-tight">SkillBridge</span>
+          <span className="text-white font-bold text-xl tracking-tight">LearnForge</span>
         </motion.div>
 
         <div className="relative space-y-6">
@@ -151,7 +152,7 @@ export function ForgotPasswordForm() {
           <p className="text-white/90 text-sm leading-relaxed italic">
             "Your learning journey is too important to let a forgotten password stop you."
           </p>
-          <p className="text-white/50 text-xs mt-2">— SkillBridge Team</p>
+          <p className="text-white/50 text-xs mt-2">— LearnForge Team</p>
         </motion.div>
       </div>
 
@@ -171,10 +172,10 @@ export function ForgotPasswordForm() {
             transition={{ duration: 0.4 }}
             className="lg:hidden flex items-center gap-2 mb-8"
           >
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
-              <GraduationCap className="w-4 h-4 text-primary-foreground" />
+            <div className="p-1 bg-white rounded-lg">
+              <Image src="/ForgeLogo.png" alt="LearnForge" width={32} height={32} className="w-8 h-8" />
             </div>
-            <span className="font-bold text-lg">SkillBridge</span>
+            <span className="font-bold text-lg">LearnForge</span>
           </motion.div>
 
           <AnimatePresence mode="wait">

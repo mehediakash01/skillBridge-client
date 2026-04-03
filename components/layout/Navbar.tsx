@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Moon, Sun, Menu, LogOut, LayoutDashboard, GraduationCap, BookOpen, Lightbulb, ChevronDown, Info } from "lucide-react";
+import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useSession } from "@/src/hooks/useSession";
 import { cn } from "@/src/lib/utils";
@@ -85,17 +86,14 @@ export default function Navbar() {
 
           {/* ── Logo ─────────────────────────────────── */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <div className={cn(
-              "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
-              isTransparent ? "bg-white/20" : "bg-primary"
-            )}>
-              <GraduationCap className={cn("w-4 h-4", isTransparent ? "" : "text-primary-foreground")} />
+            <div className="p-1 bg-white rounded-lg">
+              <Image src="/ForgeLogo.png" alt="LearnForge" width={40} height={40} className="w-10 h-10" />
             </div>
             <span className={cn(
-              "font-black text-xl tracking-tight transition-colors",
+              "font-black text-lg tracking-tight transition-colors",
               isTransparent ? "" : "text-foreground"
             )} style={{ fontFamily: "'Fraunces', serif" }}>
-              SkillBridge
+              LearnForge
             </span>
           </Link>
 
@@ -248,11 +246,11 @@ export default function Navbar() {
               <SheetContent side="right" className="w-[85%] sm:w-96 p-0">
                 <SheetHeader className="p-6 pb-4 border-b">
                   <SheetTitle className="flex items-center gap-2 text-left">
-                    <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
-                      <GraduationCap className="w-4 h-4 text-primary-foreground" />
+                    <div className="p-1 bg-white rounded-lg">
+                      <Image src="/ForgeLogo.png" alt="LearnForge" width={40} height={40} className="w-10 h-10" />
                     </div>
-                    <span className="font-black text-xl" style={{ fontFamily: "'Fraunces', serif" }}>
-                      SkillBridge
+                    <span className="font-black text-lg" style={{ fontFamily: "'Fraunces', serif" }}>
+                      LearnForge
                     </span>
                   </SheetTitle>
                 </SheetHeader>
