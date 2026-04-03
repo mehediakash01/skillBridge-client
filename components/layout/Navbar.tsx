@@ -9,6 +9,7 @@ import { useTheme } from "next-themes";
 import { useSession } from "@/src/hooks/useSession";
 import { cn } from "@/src/lib/utils";
 import { authClient } from "@/src/lib/auth-client";
+import { getDashboardPathFromRole } from "@/src/lib/auth-routing";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuTrigger, DropdownMenuSeparator,
@@ -51,14 +52,7 @@ export default function Navbar() {
 
   const user = session?.user as User;
   const isAuthenticated = !!user && !isLoading;
-
-  const getDashboardPath = () => {
-    if (!user?.role) return "/dashboard";
-    const role = user.role.toLowerCase();
-    if (role.includes("tutor")) return "/tutor/dashboard";
-    if (role.includes("admin")) return "/admin-dashboard";
-    return "/dashboard";
-  };
+  const dashboardPath = getDashboardPathFromRole(user?.role);
 
   const handleLogout = async () => {
     try {
@@ -190,7 +184,7 @@ export default function Navbar() {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href={getDashboardPath()} className="flex items-center gap-2.5 py-2.5 cursor-pointer">
+                    <Link href={dashboardPath} className="flex items-center gap-2.5 py-2.5 cursor-pointer">
                       <LayoutDashboard className="h-4 w-4" />
                       Dashboard
                     </Link>
@@ -297,7 +291,7 @@ export default function Navbar() {
                         </div>
                       </div>
                       <Link
-                        href={getDashboardPath()}
+                        href={dashboardPath}
                         onClick={() => setMobileOpen(false)}
                         className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted text-sm font-medium transition-colors"
                       >

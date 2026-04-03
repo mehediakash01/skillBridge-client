@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Eye, EyeOff, ArrowRight, GraduationCap, Star, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getDashboardPathFromRole } from "@/src/lib/auth-routing";
 
 const formSchema = z.object({
   password: z.string().min(8, "Minimum 8 characters"),
@@ -64,8 +65,11 @@ export function LoginForm() {
         if (error) {
           toast.error(error.message, { id: toastId });
         } else {
+          const { data: session } = await authClient.getSession();
+          const dashboardPath = getDashboardPathFromRole(session?.user?.role);
           toast.success("Welcome back!", { id: toastId });
-          router.push("/"); // Redirect to home page
+          router.replace(dashboardPath);
+          router.refresh();
         }
       } catch {
         toast.error("Something went wrong. Try again.", { id: toastId });

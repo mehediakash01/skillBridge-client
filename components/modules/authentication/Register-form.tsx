@@ -67,12 +67,17 @@ export function RegisterForm() {
       setIsSubmitting(true);
       const toastId = toast.loading("Creating your account…");
       try {
-        const { error } = await authClient.signUp.email({ email: value.email, name: value.name, password: value.password });
+        const { error } = await authClient.signUp.email({
+          email: value.email,
+          name: value.name,
+          password: value.password,
+          role: value.role,
+        });
         if (error) {
           toast.error(error.message, { id: toastId });
         } else {
           toast.success("Account created! Welcome to LearnForge 🎉", { id: toastId });
-          router.push("/"); 
+          router.push("/login"); 
         }
       } catch {
         toast.error("Something went wrong. Try again.", { id: toastId });
