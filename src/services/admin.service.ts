@@ -113,7 +113,7 @@ export const createCategory = async (categoryName: string) => {
 }
 
 export const deleteCategory = async (id: number) => {
-  const res = await fetch(`${BASE_URL}/categories/${id}`, {
+  const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/categories/${id}`, {
     method: "DELETE",
     credentials: "include",
   })
