@@ -1,5 +1,6 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { getTutors } from "@/src/services/tutor.service"
+import { CategoryExplorer } from "@/components/CategoryExplorer"
 import { ArrowRight, Star, BookOpen, Award, CheckCircle, Clock, Globe, Zap, Shield, ChevronRight, Play, Video, Calendar, Target, GraduationCap, HeartHandshake, ShieldCheck, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -18,16 +19,16 @@ async function getCategories() {
 }
 
 
-// ── Shared Animation Variants ─────────────────────────────
-const fadeUp = {
+// ΓöÇΓöÇ Shared Animation Variants ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+const fadeUp: any = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
 };
-const stagger = {
+const stagger: any = {
   visible: { transition: { staggerChildren: 0.1 } }
 };
 
-// ── Floating badge component ──────────────────────────────
+// ΓöÇΓöÇ Floating badge component ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 function FloatingBadge({ text, className, delay = 0 }: { text: string; className: string; delay?: number }) {
   return (
     <motion.div 
@@ -42,7 +43,7 @@ function FloatingBadge({ text, className, delay = 0 }: { text: string; className
   )
 }
 
-// ── Step card ─────────────────────────────────────────────
+// ΓöÇΓöÇ Step card ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 function StepCard({ number, title, desc }: { number: string; title: string; desc: string }) {
   return (
     <div className="relative group">
@@ -58,7 +59,7 @@ function StepCard({ number, title, desc }: { number: string; title: string; desc
   )
 }
 
-// ── Feature card ──────────────────────────────────────────
+// ΓöÇΓöÇ Feature card ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 function FeatureCard({ icon: Icon, title, desc, accent }: { icon: any; title: string; desc: string; accent: string }) {
   return (
     <div className="flex gap-4 p-5 rounded-xl hover:bg-muted/50 transition-colors">
@@ -73,7 +74,7 @@ function FeatureCard({ icon: Icon, title, desc, accent }: { icon: any; title: st
   )
 }
 
-// ── Testimonial ───────────────────────────────────────────
+// ΓöÇΓöÇ Testimonial ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const TESTIMONIALS = [
   { name: "Aisha Rahman", role: "University Student", text: "I went from failing calculus to acing my finals in 6 weeks. The 1-on-1 sessions made all the difference.", rating: 5, subject: "Mathematics", avatar: "AR" },
   { name: "Marcus Chen", role: "Working Professional", text: "Found an incredible Python tutor who fit my schedule perfectly. Worth every penny for the career boost.", rating: 5, subject: "Programming", avatar: "MC" },
@@ -81,13 +82,13 @@ const TESTIMONIALS = [
   { name: "David Okafor", role: "Parent", text: "Booked sessions for my daughter and watched her confidence soar. The platform is incredibly easy to use.", rating: 5, subject: "Science", avatar: "DO" },
 ]
 
-// ── FAQ ───────────────────────────────────────────────────
+// ΓöÇΓöÇ FAQ ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const FAQS = [
   { q: "How does booking work?", a: "Browse tutors, select a date, choose an available time slot, and confirm. Your tutor will share a meeting link before the session." },
-  { q: "Can I cancel a booking?", a: "Yes — you can cancel anytime before the tutor adds a meeting link. Once a link is shared, the session is committed." },
+  { q: "Can I cancel a booking?", a: "Yes ΓÇö you can cancel anytime before the tutor adds a meeting link. Once a link is shared, the session is committed." },
   { q: "How do I leave a review?", a: "After joining your session, a Review button appears in your dashboard. You can rate and comment once per session." },
   { q: "How are tutors vetted?", a: "Tutors create profiles with their experience, subjects, and hourly rates. Student reviews build their public rating over time." },
-  { q: "What subjects are available?", a: "We cover a wide range — from academic subjects like Math, Science and English to professional skills like Programming and Business." },
+  { q: "What subjects are available?", a: "We cover a wide range ΓÇö from academic subjects like Math, Science and English to professional skills like Programming and Business." },
 ]
 
 export default async function LandingPage() {
@@ -134,7 +135,7 @@ export default async function LandingPage() {
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.12); }
       `}</style>
 
-      {/* ── 1. HERO ──────────────────────────────────────── */}
+      {/* ΓöÇΓöÇ 1. HERO ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-background">
         {/* Dynamic Background */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
@@ -292,14 +293,14 @@ export default async function LandingPage() {
               </div>
 
               {/* Floating Badges */}
-              <FloatingBadge text="Session confirmed 🎉" className="-top-4 right-10 z-30" delay={0.6} />
-              <FloatingBadge text="⭐ 5-Star Review" className="bottom-24 -left-6 z-30" delay={0.8} />
+              <FloatingBadge text="Session confirmed ≡ƒÄë" className="-top-4 right-10 z-30" delay={0.6} />
+              <FloatingBadge text="Γ¡É 5-Star Review" className="bottom-24 -left-6 z-30" delay={0.8} />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ── 2. STATS MARQUEE ─────────────────────────────── */}
+      {/* ΓöÇΓöÇ 2. STATS MARQUEE ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="bg-primary/5 border-y border-primary/10 py-6 overflow-hidden relative">
         <div className="absolute inset-y-0 left-0 w-1/6 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none"></div>
         <div className="absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none"></div>
@@ -310,22 +311,22 @@ export default async function LandingPage() {
           style={{ width: "fit-content" }}
         >
           {[...Array(2)].fill([
-            "📚 Expert 1-on-1 Tutoring",
-            "⚡ Book in Under 2 Minutes",
-            "🌍 100% Online Sessions",
-            "⭐ 4.9 Average Rating",
-            "🔒 Cancel Anytime",
-            "🎯 Any Subject, Any Level"
+            "≡ƒôÜ Expert 1-on-1 Tutoring",
+            "ΓÜí Book in Under 2 Minutes",
+            "≡ƒîì 100% Online Sessions",
+            "Γ¡É 4.9 Average Rating",
+            "≡ƒöÆ Cancel Anytime",
+            "≡ƒÄ» Any Subject, Any Level"
           ]).flat().map((item, i) => (
             <span key={i} className="flex items-center gap-16">
               {item}
-              <span className="opacity-30">·</span>
+              <span className="opacity-30">┬╖</span>
             </span>
           ))}
         </motion.div>
       </section>
 
-      {/* ── 2.5 TRUSTED BY & SOCIAL PROOF ────────────────────── */}
+      {/* ΓöÇΓöÇ 2.5 TRUSTED BY & SOCIAL PROOF ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-20 bg-background relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--muted)/0.5),transparent)] pointer-events-none" />
         <div className="container mx-auto max-w-6xl px-4 text-center relative z-10">
@@ -353,7 +354,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 3. HOW IT WORKS (Upgraded) ──────────────────────────────── */}
+      {/* ΓöÇΓöÇ 3. HOW IT WORKS (Upgraded) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-32 bg-muted/30 relative">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.03)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.03)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_10%,transparent_100%)] pointer-events-none" />
         
@@ -442,65 +443,9 @@ export default async function LandingPage() {
 
 
 
-      {/* ── 4. CATEGORIES ────────────────────────────────── */}   <section className="py-28 bg-muted/40">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-14 gap-4">
-            <div>
-              <Badge variant="secondary" className="mb-4 rounded-full px-4">Subjects</Badge>
-              <h2 className="font-display text-5xl font-black">
-                Explore by
-                <span className="italic font-light"> Category</span>
-              </h2>
-            </div>
-            <Link href="/tutors">
-              <Button variant="outline" className="rounded-full gap-2">
-                All Subjects <ChevronRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </div>
+      <CategoryExplorer categories={categoryList} />
 
-          {categoryList.length > 0 ? (
-            <div className="flex flex-wrap gap-3">
-              {categoryList.map((cat: any, i: number) => {
-                const colors = [
-                  "bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100",
-                  "bg-violet-50 text-violet-700 border-violet-100 hover:bg-violet-100",
-                  "bg-amber-50 text-amber-700 border-amber-100 hover:bg-amber-100",
-                  "bg-green-50 text-green-700 border-green-100 hover:bg-green-100",
-                  "bg-rose-50 text-rose-700 border-rose-100 hover:bg-rose-100",
-                  "bg-cyan-50 text-cyan-700 border-cyan-100 hover:bg-cyan-100",
-                  "bg-orange-50 text-orange-700 border-orange-100 hover:bg-orange-100",
-                  "bg-indigo-50 text-indigo-700 border-indigo-100 hover:bg-indigo-100",
-                ]
-                const sizes = ["text-lg px-6 py-3", "text-base px-5 py-2.5", "text-sm px-4 py-2"]
-                const color = colors[i % colors.length]
-                const size = sizes[i % sizes.length]
-                return (
-                  <Link href={`/tutors?category=${cat.id}`} key={cat.id}>
-                    <div className={`inline-flex items-center gap-2 rounded-full border font-medium transition-colors cursor-pointer ${color} ${size}`}>
-                      <BookOpen className="w-4 h-4" />
-                      {cat.categoryName}
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="flex flex-wrap gap-3">
-              {["Mathematics", "Physics", "Chemistry", "Biology", "English", "Programming", "History", "Economics"].map((s) => (
-                <Link href="/tutors" key={s}>
-                  <div className="inline-flex items-center gap-2 rounded-full border font-medium px-5 py-2.5 text-base bg-primary/5 text-primary border-primary/10 hover:bg-primary/10 transition-colors cursor-pointer">
-                    <BookOpen className="w-4 h-4" />
-                    {s}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ── 5. FEATURED TUTORS ───────────────────────────── */}
+      {/* ΓöÇΓöÇ 5. FEATURED TUTORS ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-28 bg-background">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-14 gap-4">
@@ -607,7 +552,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 5.5 THE LEARNING EXPERIENCE ────────────────────── */}
+      {/* ΓöÇΓöÇ 5.5 THE LEARNING EXPERIENCE ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-28 bg-primary/5">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -665,7 +610,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 6. WHY SKILLBRIDGE ──────────────────────────── */}
+      {/* ΓöÇΓöÇ 6. WHY SKILLBRIDGE ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-accent/5" />
         <div className="container mx-auto max-w-6xl px-4 relative">
@@ -677,7 +622,7 @@ export default async function LandingPage() {
                 <span className="italic font-light block">to Learn Better</span>
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-8 max-w-md">
-                We've built every feature around the real needs of students and tutors — from instant booking to seamless video sessions and honest reviews.
+                We've built every feature around the real needs of students and tutors ΓÇö from instant booking to seamless video sessions and honest reviews.
               </p>
               <Link href="/register">
                 <Button className="rounded-full px-8 gap-2">
@@ -700,7 +645,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 6.5 BECOME A TUTOR ───────────────────────────── */}
+      {/* ΓöÇΓöÇ 6.5 BECOME A TUTOR ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-24 bg-zinc-950 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[20rem] h-[20rem] bg-blue-500/20 rounded-full blur-[80px] pointer-events-none" />
@@ -783,7 +728,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 7. TESTIMONIALS ──────────────────────────────── */}
+      {/* ΓöÇΓöÇ 7. TESTIMONIALS ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-28 bg-muted/40">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="text-center mb-14">
@@ -807,7 +752,7 @@ export default async function LandingPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-sm">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.role} · {t.subject}</p>
+                    <p className="text-xs text-muted-foreground">{t.role} ┬╖ {t.subject}</p>
                   </div>
                 </div>
               </div>
@@ -816,7 +761,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 8. FAQ ───────────────────────────────────────── */}
+      {/* ΓöÇΓöÇ 8. FAQ ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-28 bg-background">
         <div className="container mx-auto max-w-3xl px-4">
           <div className="text-center mb-14">
@@ -845,7 +790,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── 9. CTA ───────────────────────────────────────── */}
+      {/* ΓöÇΓöÇ 9. CTA ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
       <section className="py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-primary via-primary/90 to-primary/80" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,white/5_1px,transparent_1px),linear-gradient(to_bottom,white/5_1px,transparent_1px)] bg-size-[48px_48px]" />
@@ -861,7 +806,7 @@ export default async function LandingPage() {
             <span className="italic font-light block opacity-80">is One Session Away</span>
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Join thousands of students already learning smarter with SkillBridge. Find your tutor today — no commitment required.
+            Join thousands of students already learning smarter with SkillBridge. Find your tutor today ΓÇö no commitment required.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/tutors">

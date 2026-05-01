@@ -1,4 +1,5 @@
-const BASE_URL = "https://skill-bridge-server-tau.vercel.app/api/admin"
+const BASE_URL = "/api/admin"
+const API_BASE = "/api"
 
 export interface AdminUser {
   id: string
@@ -92,18 +93,18 @@ export const getAdminBookings = async (): Promise<AdminBooking[]> => {
 // ── Categories ────────────────────────────────────────────
 
 export const getAdminCategories = async (): Promise<Category[]> => {
-  const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/categories`, { credentials: "include" })
+  const res = await fetch(`${API_BASE}/categories`, { credentials: "include" })
   if (!res.ok) throw new Error("Failed to fetch categories")
   const data = await res.json()
   return data.data
 }
 
-export const createCategory = async (categoryName: string) => {
-  const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/categories`, {
+export const createCategory = async (payload: { categoryName: string; description?: string; icon?: string; isTrending?: boolean; learnerCount?: number; startingPrice?: number | string; tags?: string[] }) => {
+  const res = await fetch(`${API_BASE}/categories`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify({ categoryName }),
+    body: JSON.stringify(payload),
   })
   if (!res.ok) {
     const err = await res.json()
@@ -113,13 +114,27 @@ export const createCategory = async (categoryName: string) => {
 }
 
 export const deleteCategory = async (id: number) => {
-  const res = await fetch(`https://skill-bridge-server-tau.vercel.app/api/categories/${id}`, {
+  const res = await fetch(`${API_BASE}/categories/${id}`, {
     method: "DELETE",
     credentials: "include",
   })
   if (!res.ok) {
     const err = await res.json()
     throw new Error(err.message || "Failed to delete category")
+  }
+  return res.json()
+}
+
+export const updateCategory = async (id: number, payload: { categoryName?: string; description?: string; icon?: string; isTrending?: boolean; learnerCount?: number; startingPrice?: number | string; tags?: string[] }) => {
+  const res = await fetch(`${API_BASE}/categories/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.message || "Failed to update category")
   }
   return res.json()
 }

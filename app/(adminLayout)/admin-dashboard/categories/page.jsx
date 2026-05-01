@@ -6,6 +6,7 @@ import {
   getAdminCategories,
   createCategory,
   deleteCategory,
+  updateCategory,
 } from "@/src/services/admin.service"
 import { toast } from "sonner"
 import { Plus, Trash2, Tag, Loader2, BookOpen } from "lucide-react"
@@ -34,6 +35,16 @@ const categoryColors = [
 export default function AdminCategoriesPage() {
   const queryClient = useQueryClient()
   const [newCategory, setNewCategory] = useState("")
+  const [formOpenFor, setFormOpenFor] = useState(null)
+  const [formState, setFormState] = useState({
+    categoryName: "",
+    description: "",
+    icon: "",
+    isTrending: false,
+    learnerCount: 0,
+    startingPrice: "",
+    tags: "",
+  })
 
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ["admin-categories"],
@@ -41,7 +52,7 @@ export default function AdminCategoriesPage() {
   })
 
   const { mutate: addCategory, isPending: adding } = useMutation({
-    mutationFn: createCategory,
+    mutationFn: (name) => createCategory({ categoryName: name }),
     onSuccess: () => {
       toast.success("Category created!")
       setNewCategory("")
@@ -52,6 +63,15 @@ export default function AdminCategoriesPage() {
 
   const { mutate: removeCategory, isPending: deleting } = useMutation({
     mutationFn: deleteCategory,
+      const { mutate: saveCategory, isLoading: saving } = useMutation({
+        mutationFn: ({ id, payload }) => updateCategory(id, payload),
+        onSuccess: () => {
+          toast.success("Category updated!")
+          setFormOpenFor(null)
+          queryClient.invalidateQueries({ queryKey: ["admin-categories"] })
+        },
+        onError: (err) => toast.error(err.message),
+      })
     onSuccess: () => {
       toast.success("Category deleted")
       queryClient.invalidateQueries({ queryKey: ["admin-categories"] })
@@ -62,6 +82,32 @@ export default function AdminCategoriesPage() {
   const handleAdd = () => {
     if (!newCategory.trim()) return toast.error("Category name is required")
     addCategory(newCategory.trim())
+  }
+
+  const openEdit = (cat) => {
+    setFormOpenFor(cat.id)
+    setFormState({
+      categoryName: cat.categoryName || "",
+      description: cat.description || "",
+      icon: cat.icon || "",
+      isTrending: !!cat.isTrending,
+      learnerCount: cat.learnerCount || 0,
+      startingPrice: cat.startingPrice || "",
+      tags: (cat.tags && cat.tags.join(", ")) || "",
+    })
+  }
+
+  const handleSave = (id) => {
+    const payload = {
+      categoryName: formState.categoryName,
+      description: formState.description,
+      icon: formState.icon,
+      isTrending: formState.isTrending,
+      learnerCount: Number(formState.learnerCount) || 0,
+      startingPrice: formState.startingPrice,
+      tags: formState.tags ? formState.tags.split(",").map(t => t.trim()).filter(Boolean) : [],
+    }
+    saveCategory({ id, payload })
   }
 
   const getColorForIndex = (index) => categoryColors[index % categoryColors.length]
@@ -180,38 +226,59 @@ export default function AdminCategoriesPage() {
                       <div className={`p-2.5 bg-white rounded-lg border ${colors.border}`}>
                         <Tag className={`w-5 h-5 ${colors.icon}`} />
                       </div>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <button
-                            className="p-1.5 hover:bg-red-100 rounded-lg transition-colors"
-                            disabled={deleting}
-                            title="Delete category"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Delete "{cat.categoryName}"?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This will permanently delete this category. Tutors who have this
-                              subject assigned will lose it.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              className="bg-red-600 hover:bg-red-700"
-                              onClick={() => removeCategory(cat.id)}
+                      <div className="flex items-center gap-2">
+                        <Button size="sm" variant="ghost" onClick={() => openEdit(cat)}>Edit</Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              className="p-1.5 hover:bg-red-100 rounded-lg transition-colors"
+                              disabled={deleting}
+                              title="Delete category"
                             >
-                              Yes, delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete "{cat.categoryName}"?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will permanently delete this category. Tutors who have this
+                                subject assigned will lose it.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-red-600 hover:bg-red-700"
+                                onClick={() => removeCategory(cat.id)}
+                              >
+                                Yes, delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900">{cat.categoryName}</h3>
-                    <p className="text-gray-500 text-sm mt-2">Subject category</p>
+
+                    {formOpenFor === cat.id ? (
+                      <div className="space-y-3">
+                        <Input value={formState.categoryName} onChange={(e) => setFormState(s => ({...s, categoryName: e.target.value}))} />
+                        <Input value={formState.icon} onChange={(e) => setFormState(s => ({...s, icon: e.target.value}))} placeholder="Icon URL" />
+                        <Input value={formState.learnerCount} onChange={(e) => setFormState(s => ({...s, learnerCount: e.target.value}))} type="number" placeholder="Learner count" />
+                        <Input value={formState.startingPrice} onChange={(e) => setFormState(s => ({...s, startingPrice: e.target.value}))} type="number" placeholder="Starting price" />
+                        <Input value={formState.tags} onChange={(e) => setFormState(s => ({...s, tags: e.target.value}))} placeholder="tags, comma separated" />
+                        <Input value={formState.description} onChange={(e) => setFormState(s => ({...s, description: e.target.value}))} placeholder="Short description" />
+                        <div className="flex gap-2">
+                          <Button onClick={() => handleSave(cat.id)} disabled={saving}>Save</Button>
+                          <Button variant="ghost" onClick={() => setFormOpenFor(null)}>Cancel</Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <h3 className="text-lg font-semibold text-gray-900">{cat.categoryName}</h3>
+                        <p className="text-gray-500 text-sm mt-2">{cat.description || 'Subject category'}</p>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
               )
