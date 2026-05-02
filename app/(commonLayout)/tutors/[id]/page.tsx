@@ -31,7 +31,12 @@ function StarDisplay({ rating, size = "sm" }: { rating: number; size?: "sm" | "m
 
 export default async function TutorDetailsPage({ params }: Props) {
   const { id } = await params
-  const tutor = await getTutorById(id)
+  let tutor = null
+  try {
+    tutor = await getTutorById(id)
+  } catch (error) {
+    console.error("Failed to load tutor details:", error)
+  }
 
   if (!tutor || !tutor.Student) {
     return (

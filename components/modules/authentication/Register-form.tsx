@@ -71,11 +71,27 @@ export function RegisterForm() {
           email: value.email,
           name: value.name,
           password: value.password,
-          role: value.role,
         });
         if (error) {
           toast.error(error.message, { id: toastId });
         } else {
+          // If user selected a role other than STUDENT, update it via API
+          if (value.role !== "STUDENT") {
+            try {
+              const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://skill-bridge-server-tau.vercel.app";
+              const response = await fetch(`${backendUrl}/api/users/role`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ role: value.role }),
+              });
+              if (!response.ok) {
+                console.error("Failed to set user role");
+              }
+            } catch (err) {
+              console.error("Error setting user role:", err);
+            }
+          }
           toast.success("Account created! Welcome to LearnForge 🎉", { id: toastId });
           router.push("/login"); 
         }

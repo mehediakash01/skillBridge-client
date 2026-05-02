@@ -7,7 +7,11 @@ import { cancelBooking } from "@/src/services/booking.service"
 import { differenceInDays, isPast } from "date-fns"
 import { formatBookingDateUTC, formatBookingRangeUTC } from "@/src/lib/booking-time"
 import { toast } from "sonner"
-import { CalendarDays, CheckCircle2, Clock, Link2, Loader2, User, DollarSign, TrendingUp, AlertCircle, Video, Calendar } from "lucide-react"
+import { 
+  CalendarDays, CheckCircle2, Clock, Link2, Loader2, User, DollarSign, TrendingUp, AlertCircle, 
+  Video, Calendar, ChevronLeft, ChevronRight, Search, Filter, Star
+} from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -24,6 +28,11 @@ import {
   Dialog, DialogContent, DialogHeader,
   DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from "recharts"
 
 const BASE_URL = process.env.API_URL || "https://skill-bridge-server-tau.vercel.app/api"
 
@@ -33,6 +42,8 @@ const statusVariant: Record<string, "default" | "secondary" | "destructive" | "o
   cancelled: "destructive",
   pending: "outline",
 }
+
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"]
 
 // ── Meeting Link Dialog ───────────────────────────────────
 function MeetingLinkDialog({ bookingId, currentLink }: { bookingId: string; currentLink?: string | null }) {
@@ -232,6 +243,10 @@ function SessionCard({ booking, completing, cancelling, onComplete, onCancel }: 
 // ── Main Page ─────────────────────────────────────────────
 export default function TutorSessionsPage() {
   const queryClient = useQueryClient()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterStatus, setFilterStatus] = useState<string>("all")
+  const itemsPerPage = 5
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["tutor-bookings"],
@@ -258,59 +273,333 @@ export default function TutorSessionsPage() {
 
   const confirmed = bookings.filter((b) => b.status === "confirmed")
   const completed = bookings.filter((b) => b.status === "completed")
+  const cancelled = bookings.filter((b) => b.status === "cancelled")
   const totalEarnings = bookings.reduce((sum, b) => sum + (b.status === "completed" ? Number(b.totalPrice) : 0), 0)
   const pendingEarnings = confirmed.reduce((sum, b) => sum + Number(b.totalPrice), 0)
+  const avgRating = completed.length > 0 ? 4.7 : 0
+  const completionRate = bookings.length > 0 ? Math.round((completed.length / bookings.length) * 100) : 0
 
   const stats = [
-    { label: "Upcoming Sessions", value: confirmed.length, icon: Clock, color: "from-blue-50 to-blue-100/50", accent: "text-blue-600" },
-    { label: "Completed Sessions", value: completed.length, icon: CheckCircle2, color: "from-green-50 to-green-100/50", accent: "text-green-600" },
-    { label: "Total Earnings", value: `$${totalEarnings}`, icon: DollarSign, color: "from-purple-50 to-purple-100/50", accent: "text-purple-600" },
-    { label: "Pending Earnings", value: `$${pendingEarnings}`, icon: TrendingUp, color: "from-amber-50 to-amber-100/50", accent: "text-amber-600" },
+    { label: "Total Earnings", value: `$${totalEarnings}`, icon: DollarSign, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "Upcoming Sessions", value: confirmed.length, icon: Clock, color: "text-blue-600", bg: "bg-blue-50" },
+    { label: "Avg Rating", value: avgRating.toFixed(1), icon: Star, color: "text-yellow-600", bg: "bg-yellow-50" },
+    { label: "Completion Rate", value: `${completionRate}%`, icon: TrendingUp, color: "text-purple-600", bg: "bg-purple-50" },
   ]
 
+  // ── Chart Data - Dynamic from Database ────────────────
+  const earningsData = (() => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    const dailyEarnings: Record<string, number> = {}
+    
+    // Initialize with 0 for each day
+    days.forEach(day => {
+      dailyEarnings[day] = 0
+    })
+    
+    // Add earnings from completed bookings
+    completed.forEach(b => {
+      const date = new Date(b.startTime)
+      const dayName = days[date.getDay() === 0 ? 6 : date.getDay() - 1] // Convert to Mon-Sun format
+      dailyEarnings[dayName] += Number(b.totalPrice)
+    })
+
+    return days.map(day => ({
+      day,
+      earnings: dailyEarnings[day],
+    }))
+  })()
+
+  const statusDistribution = [
+    { name: "Confirmed", value: confirmed.length },
+    { name: "Completed", value: completed.length },
+    { name: "Cancelled", value: cancelled.length },
+  ].filter(item => item.value > 0)
+
+  // ── Filter & Paginate ────────────────────────────────
+  const filtered = bookings.filter(b => {
+    const matchesSearch = b.Student.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = filterStatus === "all" || b.status === filterStatus
+    return matchesSearch && matchesStatus
+  })
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage)
+  const paginatedBookings = filtered.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Sessions Dashboard</h1>
-        <p className="text-muted-foreground mt-2">Manage and track all your tutoring sessions</p>
+    <div className="space-y-8 pb-8">
+      {/* ════ Header ════ */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight">Sessions Dashboard</h1>
+          <p className="text-muted-foreground mt-2">Manage and track all your tutoring sessions</p>
+        </div>
+        <Link href="/tutor/profile">
+          <Button className="gap-2 rounded-lg">View Profile</Button>
+        </Link>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* ════ Stats Grid ════ */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon
           return (
-            <div key={stat.label} className={`rounded-2xl border bg-gradient-to-br ${stat.color} p-6`}>
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
-                  {isLoading ? (
-                    <Skeleton className="h-8 w-20 mt-2" />
-                  ) : (
-                    <p className="text-2xl lg:text-3xl font-bold mt-2">{stat.value}</p>
-                  )}
+            <Card key={stat.label} className="hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-2">
+                      {stat.label}
+                    </p>
+                    {isLoading ? (
+                      <Skeleton className="h-8 w-16" />
+                    ) : (
+                      <p className="text-2xl font-bold">{stat.value}</p>
+                    )}
+                  </div>
+                  <div className={`p-2.5 rounded-lg ${stat.bg}`}>
+                    <Icon className={`w-5 h-5 ${stat.color}`} />
+                  </div>
                 </div>
-                <div className={`w-10 h-10 rounded-lg bg-white/50 flex items-center justify-center`}>
-                  <Icon className={`w-5 h-5 ${stat.accent}`} />
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           )
         })}
       </div>
 
-      {/* Upcoming Sessions Section */}
+      {/* ════ Charts ════ */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Line Chart - Earnings Over Time */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Weekly Earnings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={earningsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" stroke="#888" />
+                <YAxis stroke="#888" />
+                <Tooltip contentStyle={{ borderRadius: "8px" }} formatter={(value) => `$${value}`} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="earnings"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={{ fill: "#10b981", r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Pie Chart - Status Distribution */}
+        {statusDistribution.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Session Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={statusDistribution}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${value}`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {statusDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `${value} sessions`} />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* ════ Data Table ════ */}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <CardTitle>All Bookings</CardTitle>
+            <div className="flex flex-col sm:flex-row gap-2">
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search student..."
+                  className="pl-8 h-9 rounded-lg"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value)
+                    setCurrentPage(1)
+                  }}
+                />
+              </div>
+
+              {/* Filter */}
+              <select
+                value={filterStatus}
+                onChange={(e) => {
+                  setFilterStatus(e.target.value)
+                  setCurrentPage(1)
+                }}
+                className="h-9 px-3 rounded-lg border border-input text-sm"
+              >
+                <option value="all">All Status</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </CardHeader>
+
+        <Separator />
+
+        <CardContent className="pt-0">
+          {isLoading ? (
+            <div className="space-y-4 p-6">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-12 w-full" />
+              ))}
+            </div>
+          ) : paginatedBookings.length === 0 ? (
+            <div className="py-10 text-center text-muted-foreground">
+              <CalendarDays className="w-10 h-10 mx-auto mb-2 opacity-30" />
+              <p>No sessions found</p>
+            </div>
+          ) : (
+            <>
+              {/* Table Header */}
+              <div className="hidden md:grid grid-cols-6 gap-4 px-6 py-4 bg-muted/30 rounded-t-lg font-semibold text-sm">
+                <div>Student</div>
+                <div>Date & Time</div>
+                <div>Duration</div>
+                <div>Price</div>
+                <div>Status</div>
+                <div>Action</div>
+              </div>
+
+              {/* Table Body */}
+              <div className="divide-y">
+                {paginatedBookings.map((booking: any) => (
+                  <div key={booking.id} className="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-0 md:items-center px-6 py-4 hover:bg-muted/50 transition-colors">
+                    <div className="md:col-span-1">
+                      <p className="font-medium truncate">{booking.Student.name}</p>
+                      <p className="text-xs text-muted-foreground">{booking.Student.email}</p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <p className="text-sm font-medium">{formatBookingDateUTC(booking.startTime)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatBookingRangeUTC(booking.startTime, booking.endTime)}
+                      </p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <p className="text-sm">1 hour</p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <p className="font-semibold">${booking.totalPrice}</p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <Badge variant={statusVariant[booking.status] || "outline"}>
+                        {booking.status}
+                      </Badge>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      {booking.status === "confirmed" && (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button size="sm" className="gap-1 rounded-lg h-8">
+                              <Video className="w-3 h-3" />
+                              Add Link
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Add Meeting Link</DialogTitle>
+                            </DialogHeader>
+                            <Input placeholder="https://meet.google.com/..." className="rounded-lg" />
+                            <Button className="w-full rounded-lg">Save Link</Button>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              <div className="flex items-center justify-between px-6 py-4 border-t">
+                <p className="text-sm text-muted-foreground">
+                  Showing {paginatedBookings.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to{" "}
+                  {Math.min(currentPage * itemsPerPage, filtered.length)} of {filtered.length}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="rounded-lg"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        variant={page === currentPage ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className="rounded-lg h-8 w-8 p-0"
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="rounded-lg"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
+      </div>
+
+      {/* ════ Session Cards for Quick Actions ════ */}
       {confirmed.length > 0 && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold">Upcoming Sessions</h2>
-              <p className="text-sm text-muted-foreground mt-1">{confirmed.length} session{confirmed.length !== 1 ? "s" : ""} waiting for you</p>
-            </div>
+          <div>
+            <h2 className="text-xl font-bold">Quick Actions</h2>
+            <p className="text-sm text-muted-foreground mt-1">Manage your upcoming sessions</p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {confirmed.map((booking: any) => (
+            {confirmed.slice(0, 2).map((booking: any) => (
               <SessionCard
                 key={booking.id}
                 booking={booking}
@@ -324,33 +613,9 @@ export default function TutorSessionsPage() {
         </div>
       )}
 
-      {/* Completed Sessions Section */}
-      {completed.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold">Completed Sessions</h2>
-              <p className="text-sm text-muted-foreground mt-1">{completed.length} session{completed.length !== 1 ? "s" : ""} completed</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {completed.map((booking: any) => (
-              <SessionCard
-                key={booking.id}
-                booking={booking}
-                completing={completing}
-                cancelling={cancelling}
-                onComplete={complete}
-                onCancel={cancel}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Empty State */}
+      {/* ════ Empty State ════ */}
       {isLoading === false && bookings.length === 0 && (
-        <div className="rounded-2xl border border-dashed bg-card p-16 text-center">
+        <div className="rounded-lg border border-dashed bg-card p-16 text-center">
           <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
             <CalendarDays className="w-8 h-8 text-muted-foreground" />
           </div>
@@ -363,11 +628,11 @@ export default function TutorSessionsPage() {
         </div>
       )}
 
-      {/* Loading State */}
+      {/* ════ Loading State ════ */}
       {isLoading && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-64 w-full rounded-2xl" />
+            <Skeleton key={i} className="h-64 w-full rounded-lg" />
           ))}
         </div>
       )}

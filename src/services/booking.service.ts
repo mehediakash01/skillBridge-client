@@ -1,6 +1,7 @@
 
-
-const BASE_URL = "https://skill-bridge-server-tau.vercel.app/api"
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://skill-bridge-server-tau.vercel.app"
+const BASE_URL = `${BACKEND_URL}/api`
 
 export interface Tutor {
   id: string

@@ -79,6 +79,15 @@ export function LoginForm() {
     },
   });
 
+  const handleDemoLogin = async (email: string, password: string) => {
+    form.setFieldValue("email", email);
+    form.setFieldValue("password", password);
+    
+    setTimeout(() => {
+      form.handleSubmit();
+    }, 50);
+  };
+
   return (
     <div className="min-h-screen w-full grid lg:grid-cols-2">
 
@@ -247,6 +256,28 @@ export function LoginForm() {
             <div className="flex-1 h-px bg-border" />
             <span className="text-xs text-muted-foreground">or sign in with email</span>
             <div className="flex-1 h-px bg-border" />
+          </motion.div>
+
+          {/* Demo Buttons */}
+          <motion.div custom={2.5} variants={fadeUp} initial="hidden" animate="show" className="grid grid-cols-2 gap-3 mb-5">
+            <button
+              type="button"
+              onClick={() => handleDemoLogin("student@demo.com", "Demo@12345")}
+              disabled={isSubmitting}
+              className="flex items-center justify-center gap-2 rounded-xl border-2 border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 px-3 py-2.5 text-xs font-semibold text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <GraduationCap className="w-3.5 h-3.5" />
+              <span>Demo Student</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDemoLogin("tutor@demo.com", "Demo@12345")}
+              disabled={isSubmitting}
+              className="flex items-center justify-center gap-2 rounded-xl border-2 border-purple-200 dark:border-purple-500/30 bg-purple-50 dark:bg-purple-500/10 px-3 py-2.5 text-xs font-semibold text-purple-700 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Star className="w-3.5 h-3.5" />
+              <span>Demo Tutor</span>
+            </button>
           </motion.div>
 
           {/* Form */}

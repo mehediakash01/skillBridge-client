@@ -1,8 +1,10 @@
 
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://skill-bridge-server-tau.vercel.app";
 
 export const getAvailability = async (tutorId: string, date: string) => {
   const res = await fetch(
-    `${process.env.API_URL || "https://skill-bridge-server-tau.vercel.app/api"}/availability/${tutorId}/availability?date=${date}`,
+    `${BACKEND_URL}/api/availability/${tutorId}/availability?date=${date}`,
   )
 
   const data = await res.json()

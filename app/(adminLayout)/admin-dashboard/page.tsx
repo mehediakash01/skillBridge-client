@@ -6,15 +6,25 @@ import { format, subDays, eachDayOfInterval, parseISO, startOfDay } from "date-f
 import {
   Users, BookOpen, CheckCircle2, Tag,
   DollarSign, GraduationCap, TrendingUp, Activity,
+  ChevronLeft, ChevronRight, Search,
 } from "lucide-react"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useState } from "react"
 import {
   ResponsiveContainer,
   LineChart,
   Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -107,6 +117,11 @@ function StatCard({
 
 // ── Main Page ─────────────────────────────────────────────
 export default function AdminOverviewPage() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterStatus, setFilterStatus] = useState<string>("all")
+  const itemsPerPage = 8
+
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: getAdminStats,
@@ -120,10 +135,50 @@ export default function AdminOverviewPage() {
   const chartData = buildChartData(bookings)
   const chartLoading = bookingsLoading
 
-  // Recent 5 bookings
-  const recentBookings = [...bookings]
-    .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
+  // Chart data for bar chart - top tutors
+  const topTutors = bookings
+    .reduce((acc: any, b: any) => {
+      const found = acc.find((item: any) => item.name === b.Tutor.bio)
+      if (found) {
+        found.bookings += 1
+        found.earnings += Number(b.totalPrice)
+      } else {
+        acc.push({ name: b.Tutor.bio, bookings: 1, earnings: Number(b.totalPrice) })
+      }
+      return acc
+    }, [])
+    .sort((a: any, b: any) => b.earnings - a.earnings)
     .slice(0, 5)
+
+  // Pie chart data - platform distribution
+  const platformDistribution = [
+    { name: "Students", value: stats?.totalStudents || 0 },
+    { name: "Tutors", value: stats?.totalTutors || 0 },
+  ]
+
+  // Status distribution
+  const statusDistribution = [
+    { name: "Confirmed", value: bookings.filter((b) => b.status === "confirmed").length },
+    { name: "Completed", value: bookings.filter((b) => b.status === "completed").length },
+    { name: "Cancelled", value: bookings.filter((b) => b.status === "cancelled").length },
+  ]
+
+  const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"]
+
+  // Filter & Paginate bookings
+  const filtered = bookings.filter(b => {
+    const matchesSearch =
+      b.Student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      b.Tutor.bio.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = filterStatus === "all" || b.status === filterStatus
+    return matchesSearch && matchesStatus
+  })
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage)
+  const paginatedBookings = filtered.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
 
   const statusVariant: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
     confirmed: "default",
@@ -134,12 +189,12 @@ export default function AdminOverviewPage() {
 
   const statCards = [
     { label: "Total Users", value: stats?.totalUsers, icon: Users, color: "text-blue-600", bg: "bg-blue-500/10" },
-    { label: "Tutors", value: stats?.totalTutors, icon: GraduationCap, color: "text-violet-600", bg: "bg-violet-500/10" },
     { label: "Students", value: stats?.totalStudents, icon: BookOpen, color: "text-indigo-600", bg: "bg-indigo-500/10" },
+    { label: "Tutors", value: stats?.totalTutors, icon: GraduationCap, color: "text-violet-600", bg: "bg-violet-500/10" },
     { label: "Total Bookings", value: stats?.totalBookings, icon: Activity, color: "text-green-600", bg: "bg-green-500/10" },
     { label: "Completed", value: stats?.completedBookings, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-500/10" },
     { label: "Categories", value: stats?.totalCategories, icon: Tag, color: "text-orange-600", bg: "bg-orange-500/10" },
-    { label: "Total Revenue", value: stats ? `$${Number(stats.totalRevenue).toFixed(2)}` : null, icon: DollarSign, color: "text-yellow-600", bg: "bg-yellow-500/10" },
+    { label: "Total Revenue", value: stats ? `$${Number(stats.totalRevenue).toFixed(0)}` : null, icon: DollarSign, color: "text-yellow-600", bg: "bg-yellow-500/10" },
     {
       label: "Completion Rate",
       value: stats && stats.totalBookings > 0
@@ -152,174 +207,321 @@ export default function AdminOverviewPage() {
   ]
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className="space-y-8 pb-8">
+      {/* ════ Header ════ */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Platform-wide statistics · Updated live
-          </p>
+          <h1 className="text-3xl font-black tracking-tight">Admin Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Platform overview and management</p>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          Live
-        </div>
+        <Link href="/admin/profile">
+          <Button className="gap-2 rounded-lg">Admin Profile</Button>
+        </Link>
       </div>
 
-      {/* Stat cards */}
+      {/* ════ Stat Cards ════ */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statCards.map((stat) => (
           <StatCard key={stat.label} {...stat} isLoading={statsLoading} />
         ))}
       </div>
 
-      {/* Chart */}
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-base font-semibold">Booking Activity</CardTitle>
-              <p className="text-xs text-muted-foreground mt-0.5">Last 30 days</p>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <div className="w-3 h-0.5 bg-blue-500 rounded" />
-                Bookings
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-3 h-0.5 bg-emerald-500 rounded" />
-                Completed
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <Separator />
-        <CardContent className="pt-6">
-          {chartLoading ? (
-            <Skeleton className="h-64 w-full rounded-lg" />
-          ) : (
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 11, fill: "#94a3b8" }}
-                  tickLine={false}
-                  axisLine={false}
-                  // Show every 5th label to avoid crowding
-                  interval={4}
-                />
-                <YAxis
-                  tick={{ fontSize: 11, fill: "#94a3b8" }}
-                  tickLine={false}
-                  axisLine={false}
-                  allowDecimals={false}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Line
-                  type="monotone"
-                  dataKey="Bookings"
-                  stroke="#3b82f6"
-                  strokeWidth={2.5}
-                  dot={false}
-                  activeDot={{ r: 4, fill: "#3b82f6", strokeWidth: 0 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="Completed"
-                  stroke="#10b981"
-                  strokeWidth={2.5}
-                  dot={false}
-                  activeDot={{ r: 4, fill: "#10b981", strokeWidth: 0 }}
-                  strokeDasharray="5 3"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Bottom row: recent bookings + breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* Recent bookings */}
+      {/* ════ Charts ════ */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Line Chart - 30 Day Activity */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Recent Bookings</CardTitle>
+            <CardTitle className="text-base font-semibold">Booking Activity (30 days)</CardTitle>
           </CardHeader>
           <Separator />
-          <CardContent className="pt-4">
-            {bookingsLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
-              </div>
-            ) : recentBookings.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No bookings yet</p>
+          <CardContent className="pt-6">
+            {chartLoading ? (
+              <Skeleton className="h-64 w-full rounded-lg" />
             ) : (
-              <div className="space-y-3">
-                {recentBookings.map((b) => (
-                  <div key={b.id} className="flex items-center justify-between py-2">
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{b.Student.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        with {b.Tutor.Student.name} · {format(new Date(b.startTime), "MMM d, p")}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-sm font-medium">${b.totalPrice}</span>
-                      <Badge variant={statusVariant[b.status]} className="text-xs">
-                        {b.status}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <ResponsiveContainer width="100%" height={280}>
+                <LineChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={4}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    tickLine={false}
+                    axisLine={false}
+                    allowDecimals={false}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
+                    type="monotone"
+                    dataKey="Bookings"
+                    stroke="#3b82f6"
+                    strokeWidth={2.5}
+                    dot={false}
+                    activeDot={{ r: 4, fill: "#3b82f6" }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="Completed"
+                    stroke="#10b981"
+                    strokeWidth={2.5}
+                    dot={false}
+                    strokeDasharray="5 3"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             )}
           </CardContent>
         </Card>
 
-        {/* Status breakdown */}
+        {/* Bar Chart - Top Tutors */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Booking Breakdown</CardTitle>
+            <CardTitle className="text-base font-semibold">Top Tutors by Earnings</CardTitle>
           </CardHeader>
           <Separator />
-          <CardContent className="pt-4 space-y-4">
+          <CardContent className="pt-6">
+            {chartLoading || topTutors.length === 0 ? (
+              <Skeleton className="h-64 w-full rounded-lg" />
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={topTutors} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+                  <Bar dataKey="earnings" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Pie Chart - User Distribution */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold">User Distribution</CardTitle>
+          </CardHeader>
+          <Separator />
+          <CardContent className="pt-6">
+            {statsLoading ? (
+              <Skeleton className="h-64 w-full rounded-lg" />
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={platformDistribution}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${value}`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {platformDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Booking Status Distribution */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold">Booking Status</CardTitle>
+          </CardHeader>
+          <Separator />
+          <CardContent className="pt-6">
             {bookingsLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-8 w-full" />)}
-              </div>
-            ) : (() => {
-              const total = bookings.length || 1
-              const statuses = [
-                { label: "Confirmed", key: "confirmed", color: "bg-blue-500" },
-                { label: "Completed", key: "completed", color: "bg-emerald-500" },
-                { label: "Cancelled", key: "cancelled", color: "bg-red-400" },
-                { label: "Pending", key: "pending", color: "bg-yellow-400" },
-              ]
-              return statuses.map(({ label, key, color }) => {
-                const count = bookings.filter((b) => b.status === key).length
-                const pct = Math.round((count / total) * 100)
-                return (
-                  <div key={key} className="space-y-1.5">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{label}</span>
-                      <span className="font-medium">{count} <span className="text-muted-foreground font-normal">({pct}%)</span></span>
-                    </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${color} rounded-full transition-all`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                )
-              })
-            })()}
+              <Skeleton className="h-64 w-full rounded-lg" />
+            ) : (
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={statusDistribution}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${value}`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {statusDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
       </div>
+
+      {/* ════ Bookings Data Table ════ */}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <CardTitle>All Bookings</CardTitle>
+            <div className="flex flex-col sm:flex-row gap-2">
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search student or tutor..."
+                  className="pl-8 h-9 rounded-lg"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value)
+                    setCurrentPage(1)
+                  }}
+                />
+              </div>
+
+              {/* Filter */}
+              <select
+                value={filterStatus}
+                onChange={(e) => {
+                  setFilterStatus(e.target.value)
+                  setCurrentPage(1)
+                }}
+                className="h-9 px-3 rounded-lg border border-input text-sm"
+              >
+                <option value="all">All Status</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </CardHeader>
+
+        <Separator />
+
+        <CardContent className="pt-0">
+          {bookingsLoading ? (
+            <div className="space-y-4 p-6">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-12 w-full" />
+              ))}
+            </div>
+          ) : paginatedBookings.length === 0 ? (
+            <div className="py-10 text-center text-muted-foreground">
+              <Activity className="w-10 h-10 mx-auto mb-2 opacity-30" />
+              <p>No bookings found</p>
+            </div>
+          ) : (
+            <>
+              {/* Table Header */}
+              <div className="hidden md:grid grid-cols-6 gap-4 px-6 py-4 bg-muted/30 rounded-t-lg font-semibold text-sm">
+                <div>Student</div>
+                <div>Tutor</div>
+                <div>Date & Time</div>
+                <div>Amount</div>
+                <div>Status</div>
+                <div>Action</div>
+              </div>
+
+              {/* Table Body */}
+              <div className="divide-y">
+                {paginatedBookings.map((b: any) => (
+                  <div key={b.id} className="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-0 md:items-center px-6 py-4 hover:bg-muted/50 transition-colors">
+                    <div className="md:col-span-1">
+                      <p className="font-medium truncate">{b.Student.name}</p>
+                      <p className="text-xs text-muted-foreground">{b.Student.email}</p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <p className="font-medium truncate">{b.Tutor.bio}</p>
+                      <p className="text-xs text-muted-foreground">Tutor</p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <p className="text-sm font-medium">{format(new Date(b.startTime), "MMM d, yyyy")}</p>
+                      <p className="text-xs text-muted-foreground">{format(new Date(b.startTime), "h:mm a")}</p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <p className="font-semibold">${b.totalPrice}</p>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <Badge variant={statusVariant[b.status] || "outline"}>
+                        {b.status}
+                      </Badge>
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <Button size="sm" variant="outline" className="rounded-lg h-8">
+                        View
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              <div className="flex items-center justify-between px-6 py-4 border-t">
+                <p className="text-sm text-muted-foreground">
+                  Showing {paginatedBookings.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} to{" "}
+                  {Math.min(currentPage * itemsPerPage, filtered.length)} of {filtered.length}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="rounded-lg"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        variant={page === currentPage ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className="rounded-lg h-8 w-8 p-0"
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="rounded-lg"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

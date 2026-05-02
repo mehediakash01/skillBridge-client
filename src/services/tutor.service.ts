@@ -1,5 +1,14 @@
 import { TutorListItem, TutorProfileDetails } from "@/src/types"
-import { env } from "../env"
+
+const RAW_BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  "https://skill-bridge-server-tau.vercel.app"
+
+const BACKEND_URL = RAW_BACKEND_URL.replace(/\/+$/, "")
+const API_BASE_URL = BACKEND_URL.endsWith("/api")
+  ? BACKEND_URL
+  : `${BACKEND_URL}/api`
 
 
 export const getTutors = async (queryParams?: Record<string, any>) => {
@@ -12,7 +21,7 @@ export const getTutors = async (queryParams?: Record<string, any>) => {
   const params = new URLSearchParams(cleanParams as any).toString()
 
   const res = await fetch(
-    `${env.BACKEND_URL}/api/tutors?${params}`,
+    `${API_BASE_URL}/tutors?${params}`,
     { cache: "no-store" }
   )
 
@@ -32,20 +41,20 @@ export async function getTutorById(
   id: string
 ): Promise<TutorProfileDetails> {
   const res = await fetch(
-    `${env.BACKEND_URL}/api/tutors/${id}`,
+    `${API_BASE_URL}/tutors/${id}`,
     { cache: "no-store" }
   )
 
   if (!res.ok) {
-    throw new Error("Failed to fetch tutor")
+    const text = await res.text()
+    throw new Error(`Failed to fetch tutor (status ${res.status}): ${text || "No response body"}`)
   }
   const result = await res.json();
 
   return result.data
 }
 
-
-const BASE_URL = "https://skill-bridge-server-tau.vercel.app/api" 
+const BASE_URL = API_BASE_URL
 
 export interface Category {
   id: number
