@@ -1,7 +1,8 @@
 ﻿import Link from "next/link"
 import { getTutors } from "@/src/services/tutor.service"
 import { CategoryExplorer } from "@/components/CategoryExplorer"
-import { ArrowRight, Star, BookOpen, Award, CheckCircle, Clock, Globe, Zap, Shield, ChevronRight, Play, Video, Calendar, Target, GraduationCap, HeartHandshake, ShieldCheck, Search } from "lucide-react"
+import { TutorProfileCard } from "@/components/TutorProfileCard"
+import { ArrowRight, Star, BookOpen, Award, CheckCircle, Clock, Globe, Zap, Shield, ChevronRight, Play, Video, Calendar, Target, GraduationCap, HeartHandshake, ShieldCheck, Search, Sparkles, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import * as motion from "framer-motion/client"
@@ -213,46 +214,81 @@ export default async function LandingPage() {
                 
                 {/* Main Glass Card */}
                 <div className="absolute top-12 left-10 right-4 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-white/50 dark:border-zinc-800/50 p-8 transform rotate-2 hover:rotate-0 transition-all duration-500 z-10 text-foreground">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4 flex-1">
                       <div className="relative">
                         <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=c0aede" className="w-16 h-16 rounded-[1.25rem] object-cover shadow-sm bg-primary/20" alt="Tutor" />
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-[3px] border-white dark:border-zinc-900" />
+                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-500 rounded-full border-[3px] border-white dark:border-zinc-900 flex items-center justify-center">
+                          <Sparkles className="w-2.5 h-2.5 text-white" />
+                        </div>
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <p className="font-bold text-xl">Sarah Johnson</p>
-                        <p className="text-sm text-primary font-semibold tracking-wide">Machine Learning</p>
+                        <p className="text-sm text-primary font-semibold tracking-wide">Expert Machine Learning Instructor</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm font-semibold">4.9</span>
+                          <span className="text-xs text-muted-foreground">(47 reviews)</span>
+                        </div>
                       </div>
                     </div>
-                    <Badge className="bg-green-100/80 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-0 rounded-full px-4 py-1 font-semibold">Available</Badge>
+                    <Badge className="bg-green-100/80 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-0 rounded-full px-4 py-1 font-semibold whitespace-nowrap ml-2">Available</Badge>
+                  </div>
+
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <Badge className="bg-blue-100/80 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-0 rounded-full px-3 py-0.5 text-xs font-semibold">Verified</Badge>
+                    <Badge className="bg-purple-100/80 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 border-0 rounded-full px-3 py-0.5 text-xs font-semibold">Top 1%</Badge>
+                    <Badge className="bg-amber-100/80 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border-0 rounded-full px-3 py-0.5 text-xs font-semibold">Fast Responder</Badge>
                   </div>
                   
-                  <div className="bg-gradient-to-br from-primary/5 to-transparent p-5 rounded-2xl mb-6 flex justify-between items-center border border-primary/10">
-                    <div>
-                      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-1">Hourly Rate</p>
-                      <p className="font-bold text-3xl">$45<span className="text-sm font-normal text-muted-foreground">/hr</span></p>
-                    </div>
-                    <div className="w-px h-12 bg-border"></div>
-                    <div>
-                      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-1">Rating</p>
-                      <div className="flex items-center gap-1.5">
-                        <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                        <span className="font-bold text-2xl">4.9</span>
+                  <div className="bg-gradient-to-br from-primary/5 to-transparent p-4 rounded-2xl mb-5 border border-primary/10 space-y-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-2">Pricing & Earnings</p>
+                        <p className="font-bold text-2xl">$50<span className="text-sm font-normal text-muted-foreground">/hr</span></p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-2">Your Cost</p>
+                        <div className="space-y-1 text-xs">
+                          <div className="flex justify-between gap-3">
+                            <span className="text-muted-foreground">You pay:</span>
+                            <span className="font-semibold">$50</span>
+                          </div>
+                          <div className="flex justify-between gap-3 text-red-600">
+                            <span>Fee (12%):</span>
+                            <span className="font-semibold">-$6</span>
+                          </div>
+                          <div className="border-t border-border pt-1 flex justify-between gap-3 text-green-600 font-semibold">
+                            <span>Tutor gets:</span>
+                            <span>$44</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                     <p className="text-sm font-semibold text-muted-foreground mb-2 px-1">Top Expertise</p>
+                  {/* Languages & Experience */}
+                  <div className="flex gap-4 mb-4 text-xs">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Globe className="w-4 h-4 text-primary" />
+                      <span><span className="font-semibold text-foreground">3</span> languages</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Award className="w-4 h-4 text-primary" />
+                      <span><span className="font-semibold text-foreground">8+</span> years exp.</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5">
+                     <p className="text-sm font-semibold text-muted-foreground">Top Expertise</p>
                     {["Deep Learning", "Python", "Data Science"].map((subject, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3.5 rounded-xl border border-border/60 bg-background/50 hover:border-primary/30 transition-colors group cursor-default">
-                        <div className="flex items-center gap-3">
-                          <BookOpen className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <div key={idx} className="flex items-center justify-between p-3 rounded-lg border border-border/60 bg-background/50 hover:border-primary/30 transition-colors group cursor-default">
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
                           <span className="font-semibold text-sm">{subject}</span>
                         </div>
-                        <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <ChevronRight className="w-3 h-3 text-primary" />
-                        </div>
+                        <ChevronRight className="w-3 h-3 text-primary opacity-50" />
                       </div>
                     ))}
                   </div>
@@ -445,168 +481,288 @@ export default async function LandingPage() {
 
       <CategoryExplorer categories={categoryList} />
 
-      {/* ΓöÇΓöÇ 5. FEATURED TUTORS ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
-      <section className="py-28 bg-background">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-14 gap-4">
-            <div>
-              <Badge variant="secondary" className="mb-4 rounded-full px-4">Top Rated</Badge>
-              <h2 className="font-display text-5xl font-black">
-                Meet Our
-                <span className="italic font-light"> Expert Tutors</span>
-              </h2>
+      {/* ═══ 5. FEATURED TUTORS - NEW MODERN GRID DESIGN ═══ */}
+      <section className="py-28 bg-background relative overflow-hidden">
+        {/* Decorative background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 -left-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 right-1/4 w-96 h-96 bg-blue-500/3 rounded-full blur-3xl" />
+        </div>
+
+        <div className="container mx-auto max-w-7xl px-4 relative z-10">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mb-16"
+          >
+            <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Discover Expert Tutors</span>
             </div>
-            <Link href="/tutors">
-              <Button variant="outline" className="rounded-full gap-2">
-                Browse All <ChevronRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </div>
+            
+            <h2 className="text-5xl md:text-6xl font-black leading-tight mb-4">
+              Meet Skilled
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
+                Educators
+              </span>
+            </h2>
+            
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Choose from thousands of verified tutors. All are background-checked, highly-rated, and ready to help you succeed.
+            </p>
+          </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tutorList.slice(0, 6).map((tutor: any) => {
-              const rating = Number(tutor.averageRate ?? 0)
-              const hasRating = rating > 0
-              return (
-                <Link href={`/tutors/${tutor.id}`} key={tutor.id}>
-                  <div className="group rounded-2xl border bg-card overflow-hidden card-hover cursor-pointer">
-                    {/* Top accent */}
-                    <div className="h-1.5 bg-linear-to-r from-primary via-accent to-primary bg-size-[200%_auto] group-hover:bg-right transition-all duration-700" />
-
-                    <div className="p-6">
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="relative shrink-0">
-                          {tutor.Student?.image ? (
-                            <img
-                              src={tutor.Student.image}
-                              alt={tutor.Student?.name}
-                              className="w-14 h-14 rounded-2xl object-cover"
-                            />
-                          ) : (
-                            <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-primary/20 to-primary/40 flex items-center justify-center text-primary font-bold text-xl font-display">
-                              {tutor.Student?.name?.charAt(0) ?? "T"}
-                            </div>
-                          )}
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-400 border-2 border-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-bold truncate">{tutor.Student?.name ?? "Tutor"}</p>
-                          <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">{tutor.bio ?? "Expert tutor"}</p>
-                          {hasRating && (
-                            <div className="flex items-center gap-1 mt-1">
-                              <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                              <span className="text-xs font-medium">{rating.toFixed(1)}</span>
-                            </div>
-                          )}
-                        </div>
-                        <p className="text-lg font-bold text-primary shrink-0">
-                          ${tutor.hourlyRate}<span className="text-xs font-normal text-muted-foreground">/hr</span>
-                        </p>
-                      </div>
-
-                      {/* Subjects */}
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {tutor.tutorSubjects?.slice(0, 3).map((s: any) => (
-                          <span key={s.categoryId} className="text-xs px-2 py-0.5 bg-muted rounded-full">
-                            {s.category?.categoryName}
-                          </span>
-                        ))}
-                        {tutor.tutorSubjects?.length > 3 && (
-                          <span className="text-xs px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
-                            +{tutor.tutorSubjects.length - 3}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Award className="w-3.5 h-3.5" />
-                          {tutor.experience} yrs experience
-                        </span>
-                        <span className="text-primary font-medium group-hover:underline flex items-center gap-1">
-                          View Profile <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-
-            {tutorList.length === 0 && [...Array(6)].map((_, i) => (
-              <div key={i} className="rounded-2xl border bg-card p-6 opacity-50">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-muted" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-muted rounded w-3/4" />
-                    <div className="h-3 bg-muted rounded w-1/2" />
-                  </div>
-                </div>
-                <div className="flex gap-1.5">
-                  <div className="h-5 bg-muted rounded-full w-16" />
-                  <div className="h-5 bg-muted rounded-full w-20" />
-                </div>
-              </div>
+          {/* Tutors Grid - 4 Columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {tutorList.slice(0, 8).map((tutor: any, idx: number) => (
+              <motion.div
+                key={tutor.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.08 }}
+              >
+                <TutorProfileCard tutor={tutor} layout="grid" />
+              </motion.div>
             ))}
           </div>
+
+          {/* Empty State */}
+          {tutorList.length === 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="rounded-2xl border bg-card p-6 opacity-40">
+                  <div className="w-12 h-12 bg-muted rounded-xl mb-4" />
+                  <div className="h-5 bg-muted rounded w-2/3 mb-2" />
+                  <div className="h-3 bg-muted rounded w-full mb-2" />
+                  <div className="h-3 bg-muted rounded w-4/5" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Trust Badge Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-20 py-12 border-t border-border/50 space-y-8"
+          >
+            <h3 className="text-center text-2xl font-bold">Why Choose Our Tutors?</h3>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center space-y-3">
+                <div className="w-14 h-14 bg-blue-500/10 rounded-xl flex items-center justify-center mx-auto">
+                  <ShieldCheck className="w-7 h-7 text-blue-600" />
+                </div>
+                <h4 className="font-bold text-sm">Verified</h4>
+                <p className="text-xs text-muted-foreground">Background checked professionals</p>
+              </div>
+              
+              <div className="text-center space-y-3">
+                <div className="w-14 h-14 bg-yellow-500/10 rounded-xl flex items-center justify-center mx-auto">
+                  <Star className="w-7 h-7 text-yellow-600 fill-current" />
+                </div>
+                <h4 className="font-bold text-sm">Highly Rated</h4>
+                <p className="text-xs text-muted-foreground">4.9/5 average rating</p>
+              </div>
+              
+              <div className="text-center space-y-3">
+                <div className="w-14 h-14 bg-green-500/10 rounded-xl flex items-center justify-center mx-auto">
+                  <Award className="w-7 h-7 text-green-600" />
+                </div>
+                <h4 className="font-bold text-sm">Certified</h4>
+                <p className="text-xs text-muted-foreground">Experts in their fields</p>
+              </div>
+              
+              <div className="text-center space-y-3">
+                <div className="w-14 h-14 bg-purple-500/10 rounded-xl flex items-center justify-center mx-auto">
+                  <TrendingUp className="w-7 h-7 text-purple-600" />
+                </div>
+                <h4 className="font-bold text-sm">Results</h4>
+                <p className="text-xs text-muted-foreground">Students improve quickly</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 flex justify-center"
+          >
+            <Link href="/tutors">
+              <Button size="lg" className="rounded-xl px-10 h-13 text-base font-semibold gap-2 shadow-lg shadow-primary/30">
+                Explore All Tutors
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       {/* ΓöÇΓöÇ 5.5 THE LEARNING EXPERIENCE ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
-      <section className="py-28 bg-primary/5">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+      <section className="py-28 bg-gradient-to-b from-background to-muted/40 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="container mx-auto max-w-6xl px-4 relative z-10">
+          {/* Premium Student Testimonials */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-20"
+          >
+            <div className="text-center mb-16 space-y-4">
+              <Badge className="bg-blue-100/80 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 border-0 rounded-full px-4 py-2 font-semibold justify-center">
+                <Star className="w-4 h-4 mr-2 fill-current" />
+                Trusted by Students
+              </Badge>
+              <h3 className="font-display text-5xl font-black">
+                What Students Say
+              </h3>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  name: "Emily Chen",
+                  role: "Pre-med Student",
+                  text: "My tutor helped me go from a C to an A in organic chemistry. The personalized approach made all the difference.",
+                  rating: 5,
+                  subject: "Chemistry"
+                },
+                {
+                  name: "Marcus Johnson",
+                  role: "Career Switcher",
+                  text: "Learned Python in just 8 weeks with my tutor. Now I landed my first dev job thanks to SkillBridge!",
+                  rating: 5,
+                  subject: "Programming"
+                },
+                {
+                  name: "Priya Patel",
+                  role: "GMAT Prep",
+                  text: "Scored 720 on my GMAT. The structure and accountability from my tutor was exactly what I needed.",
+                  rating: 5,
+                  subject: "GMAT"
+                },
+                {
+                  name: "David Martinez",
+                  role: "High School Freshman",
+                  text: "Math used to terrify me. Now I actually enjoy it! My tutor made it so easy to understand.",
+                  rating: 5,
+                  subject: "Mathematics"
+                }
+              ].map((testimonial, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all"
+                >
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">"{testimonial.text}"</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-sm">{testimonial.name}</p>
+                      <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                    </div>
+                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs">
+                      {testimonial.subject}
+                    </Badge>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Why Our Tutors Excel */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 gap-16 items-center"
+          >
             {/* Visual Side */}
-            <div className="relative">
-               <div className="absolute inset-0 bg-primary/10 rounded-[2.5rem] transform -rotate-3 scale-105" />
-               <div className="relative bg-white rounded-3xl p-2 shadow-2xl border">
-                 <div className="bg-muted rounded-2xl aspect-video flex flex-col items-center justify-center relative overflow-hidden">
-                    {/* Placeholder for video call UI */}
-                    <div className="absolute inset-0 bg-zinc-900" />
-                    <div className="z-10 text-center">
-                      <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 mb-4 mx-auto animate-pulse">
-                         <Video className="w-8 h-8 text-white" />
+            <div className="relative hidden md:block">
+              <div className="absolute inset-0 bg-primary/10 rounded-[2.5rem] transform -rotate-3 scale-105" />
+              <div className="relative bg-white dark:bg-zinc-900 rounded-3xl p-2 shadow-2xl border">
+                <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl aspect-square flex flex-col items-center justify-center relative overflow-hidden p-8">
+                  <div className="text-center space-y-6">
+                    <div className="w-24 h-24 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
+                      <Award className="w-12 h-12 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-5xl font-black text-primary">98%</p>
+                      <p className="text-sm text-muted-foreground mt-2">Student Satisfaction Rate</p>
+                    </div>
+                    <div className="pt-8 space-y-3 text-sm">
+                      <div className="flex items-center gap-2 text-left">
+                        <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                        <span>Expert verified backgrounds</span>
                       </div>
-                      <p className="text-white font-medium">1-on-1 Live Session</p>
+                      <div className="flex items-center gap-2 text-left">
+                        <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                        <span>Continuous training</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-left">
+                        <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                        <span>Real-time feedback</span>
+                      </div>
                     </div>
-                    {/* Floating little ui elements */}
-                    <div className="absolute bottom-4 right-4 bg-black/40 backdrop-blur-md rounded-xl p-3 border border-white/10 flex gap-3">
-                      <div className="w-8 h-8 rounded-full bg-red-500/80 flex items-center justify-center"><Video className="w-4 h-4 text-white"/></div>
-                      <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><ShieldCheck className="w-4 h-4 text-white"/></div>
-                    </div>
-                 </div>
-               </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Text Side */}
-            <div className="space-y-6">
-              <Badge variant="secondary" className="rounded-full px-4">The Experience</Badge>
-              <h2 className="font-display text-4xl md:text-5xl font-black leading-tight">
-                Designed for <span className="italic font-light">Deep Learning</span>
+            <div className="space-y-8">
+              <Badge variant="secondary" className="rounded-full px-4 w-fit">Excellence Standards</Badge>
+              <h2 className="font-display text-5xl font-black leading-tight">
+                Why Our Tutors
+                <span className="italic font-light block">Stand Out</span>
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                SkillBridge provides a seamless, distraction-free environment so you can focus on what matters: mastering new skills with your expert tutor.
+                SkillBridge maintains the highest standards for tutor quality through rigorous verification, continuous professional development, and comprehensive student feedback systems.
               </p>
-              
-              <div className="space-y-4 mt-8">
+
+              <div className="space-y-4">
                 {[
-                  { icon: Video, title: "High-Quality Video", desc: "Crystal clear audio and video connections optimized for learning." },
-                  { icon: Calendar, title: "Smart Scheduling", desc: "Automated time-zone detection and calendar syncing." },
-                  { icon: ShieldCheck, title: "Safe Environment", desc: "All sessions are securely routed and tutors are fully vetted." }
+                  { icon: ShieldCheck, title: "Verified Expertise", desc: "All tutors verified with background checks and credential validation" },
+                  { icon: Award, title: "Proven Track Record", desc: "Average 4.9/5 rating from thousands of verified student reviews" },
+                  { icon: TrendingUp, title: "Results Guaranteed", desc: "Students see measurable improvement within 6-8 weeks on average" },
+                  { icon: Globe, title: "Global Talent Pool", desc: "Access world-class educators from top universities and institutions" }
                 ].map((item, idx) => (
-                   <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-white border shadow-sm hover:shadow-md transition-shadow">
-                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                       <item.icon className="w-5 h-5" />
-                     </div>
-                     <div>
-                       <h4 className="font-bold text-sm mb-1">{item.title}</h4>
-                       <p className="text-sm text-muted-foreground">{item.desc}</p>
-                     </div>
-                   </div>
+                  <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-border/50 hover:border-primary/30 transition-all group">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <item.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm mb-1">{item.title}</h4>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
+
+              <Link href="/tutors">
+                <Button size="lg" className="rounded-full px-8 gap-2">
+                  Discover Our Tutors <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
