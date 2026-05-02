@@ -28,26 +28,29 @@ function TutorCardSkeleton() {
   return (
     <div className="rounded-2xl border bg-card overflow-hidden">
       <div className="h-1 bg-muted" />
-      <div className="p-6 space-y-4">
-        <div className="flex items-start gap-4">
-          <Skeleton className="w-14 h-14 rounded-2xl shrink-0" />
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="h-3 w-16" />
-          </div>
-          <Skeleton className="h-8 w-14" />
+      <div className="p-6 space-y-4 flex flex-col h-full">
+        <div className="flex items-start justify-between gap-4">
+          <Skeleton className="w-16 h-16 rounded-xl shrink-0" />
+          <Skeleton className="w-12 h-8 rounded-lg" />
         </div>
-        <Skeleton className="h-10 w-full" />
-        <div className="flex gap-1.5">
-          <Skeleton className="h-6 w-16 rounded-full" />
-          <Skeleton className="h-6 w-20 rounded-full" />
-          <Skeleton className="h-6 w-14 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-3 w-24" />
         </div>
-        <div className="flex justify-between pt-2 border-t">
-          <Skeleton className="h-4 w-20" />
+        <div className="space-y-3 py-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+        </div>
+        <div className="flex-1" />
+        <div className="space-y-2">
           <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-3 w-full" />
         </div>
+        <div className="flex justify-between items-center pt-4 border-t">
+          <Skeleton className="h-8 w-20" />
+          <Skeleton className="h-8 w-20" />
+        </div>
+        <Skeleton className="h-10 w-full rounded-lg" />
       </div>
     </div>
   );
@@ -110,11 +113,13 @@ export default function TutorsClient({
     const params = new URLSearchParams(queryObject).toString();
 
     try {
-      const res = await fetch(`${process.env.API_URL || "https://skill-bridge-server-tau.vercel.app/api"}/tutors?${params}`, {
-        cache: "no-store",  next: { revalidate: 0 },
-
-  signal: AbortSignal.timeout(15000)
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"}/api/tutors?${params}`,
+        {
+          cache: "no-store",
+          next: { revalidate: 0 },
+        }
+      );
       if (!res.ok) throw new Error("Failed");
       const data = await res.json();
       const result = data.data;
@@ -329,8 +334,8 @@ export default function TutorsClient({
 
       <div className="container mx-auto max-w-7xl px-4 py-10">
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(9)].map((_, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(12)].map((_, i) => (
               <TutorCardSkeleton key={i} />
             ))}
           </div>
@@ -348,7 +353,7 @@ export default function TutorsClient({
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {tutors.map((tutor) => (
               <TutorCard key={tutor.id} tutor={tutor} />
             ))}

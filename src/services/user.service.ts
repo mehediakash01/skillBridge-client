@@ -6,12 +6,12 @@ export const userService ={
         try{
             const cookieStore = await cookies();
             console.log(cookieStore.toString());
-            const res = await fetch("https://skill-bridge-server-tau.vercel.app/api/auth/get-session",{
+            const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+            const res = await fetch(`${apiUrl}/api/auth/get-session`,{
                 headers:{
                     Cookie:cookieStore.toString(),
                 },
                 cache:"no-store",
-
             });
             const session = await res.json();
             if (session==null){
