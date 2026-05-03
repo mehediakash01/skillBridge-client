@@ -170,7 +170,7 @@ export function TagCloudInput({
               onChange={(e) => setSearchTerm(e.target.value)}
               onFocus={() => setIsOpen(true)}
               onKeyDown={handleKeyDown}
-              disabled={maxSelection && selectedIds.length >= maxSelection}
+              disabled={!!(maxSelection && selectedIds.length >= maxSelection)}
               className={cn(
                 "flex-1 outline-none bg-transparent text-sm dark:text-white",
                 maxSelection &&

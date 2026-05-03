@@ -10,7 +10,7 @@ import { useFormContext, Controller, useFieldArray } from "react-hook-form";
 import { Plus, Trash2, AlertCircle, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { TagCloudInput, type TagOption } from "./TagCloudInput";
+import { TagCloudInput, type TagOption } from "../TagCloudInput";
 import type { Step2FormData, LanguageFormData, EducationFormData } from "@/lib/schemas/tutor-profile-schema";
 
 interface Step2FormProps {

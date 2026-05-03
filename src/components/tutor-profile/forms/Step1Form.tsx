@@ -10,7 +10,7 @@ import { useFormContext, Controller } from "react-hook-form";
 import { AlertCircle, Play } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DragDropUploader } from "./DragDropUploader";
+import { DragDropUploader } from "../DragDropUploader";
 import type { Step1FormData } from "@/lib/schemas/tutor-profile-schema";
 
 interface Step1FormProps {
@@ -142,6 +142,7 @@ export function Step1Form({ onNext, isSubmitting = false }: Step1FormProps) {
               </p>
               <Input
                 {...field}
+                value={field.value ?? ''}
                 type="url"
                 placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
                 className="border-gray-300 dark:border-gray-600"

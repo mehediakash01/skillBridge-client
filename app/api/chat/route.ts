@@ -1,4 +1,4 @@
-import { streamText, convertToModelMessages, appendResponseMessages } from 'ai';
+import { streamText, convertToModelMessages } from 'ai';
 import { groq } from '@ai-sdk/groq';
 import { google } from '@ai-sdk/google';
 

@@ -301,7 +301,7 @@ export default function AdminOverviewPage() {
                     tickLine={false}
                     axisLine={false}
                   />
-                  <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+                  <Tooltip formatter={(value) => value ? `$${(value as number).toFixed(2)}` : "$0"} />
                   <Bar dataKey="earnings" fill="#3b82f6" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>

@@ -10,7 +10,7 @@ import { useFormContext, Controller, useFieldArray } from "react-hook-form";
 import { Plus, Trash2, AlertCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PricingSlider } from "./PricingSlider";
+import { PricingSlider } from "../PricingSlider";
 import type { Step3FormData } from "@/lib/schemas/tutor-profile-schema";
 
 interface Step3FormProps {

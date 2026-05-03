@@ -95,22 +95,26 @@ export function TutorProfileForm({
   });
 
   // Initialize form with React Hook Form
+  const defaultValues = {
+    headline: "",
+    bio: "",
+    bio_long: "",
+    intro_video_url: "",
+    badges: [],
+    experience_years: 0,
+    languages: [{ lang: "", level: "Native" }],
+    education: [{ degree: "", field: "", school: "", verified: false }],
+    hourlyRate: 50,
+    experience: 0,
+    is_published: false,
+    userId: "",
+    id_verified: false,
+  } as const satisfies TutorProfileFormData;
+
   const methods = useForm<TutorProfileFormData>({
-    resolver: zodResolver(TutorProfileSchema),
+    resolver: zodResolver(TutorProfileSchema) as any,
     mode: "onChange",
-    defaultValues: initialData || {
-      headline: "",
-      bio: "",
-      bio_long: "",
-      intro_video_url: "",
-      badges: [],
-      experience_years: 0,
-      languages: [{ lang: "", level: "Native" }],
-      education: [{ degree: "", field: "", school: "", verified: false }],
-      hourlyRate: 50,
-      experience: 0,
-      is_published: false,
-    },
+    defaultValues: initialData ? ({ ...defaultValues, ...initialData } as TutorProfileFormData) : (defaultValues as TutorProfileFormData),
   });
 
   // Simulate initial load delay
@@ -126,7 +130,7 @@ export function TutorProfileForm({
         "Found a saved draft from your last session. Would you like to restore it?"
       );
       if (confirmRestore) {
-        const merged = mergeDraftWithFormData(draft, methods.getValues());
+        const merged = mergeDraftWithFormData(draft, methods.getValues() as any);
         methods.reset(merged as TutorProfileFormData);
         toast.info("Draft restored successfully");
       }
@@ -140,25 +144,25 @@ export function TutorProfileForm({
         step1:
           currentStep >= 1
             ? {
-                headline: data.headline,
-                intro_video_url: data.intro_video_url,
-                avatar_url: data.avatar_url,
+                  headline: data.headline as string,
+                  intro_video_url: data.intro_video_url as string | undefined,
+                  avatar_url: data.avatar_url as string | undefined,
               }
             : undefined,
         step2:
           currentStep >= 2
             ? {
-                bio_long: data.bio_long,
-                experience_years: data.experience_years,
-                languages: data.languages,
-                education: data.education,
+                  bio_long: data.bio_long as string,
+                  experience_years: data.experience_years as number,
+                  languages: data.languages as any[],
+                  education: data.education as any[],
                 subjects: data.education?.map(() => 1) || [], // Placeholder
               }
             : undefined,
         step3:
           currentStep >= 3
             ? {
-                hourlyRate: data.hourlyRate,
+                  hourlyRate: data.hourlyRate as number,
                 platformFee: 0,
                 availability: [],
                 payoutMethod: undefined,
@@ -167,7 +171,7 @@ export function TutorProfileForm({
       });
 
       // Update completeness
-      const completeness = calculateProfileCompleteness(data);
+      const completeness = calculateProfileCompleteness(data as any);
       setProfileCompleteness(completeness);
     });
 

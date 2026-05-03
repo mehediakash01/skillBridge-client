@@ -20,12 +20,12 @@ export const EducationSchema = z.object({
   school: z.string().min(1, "School name required").max(100),
   year: z.number().int().min(1950).max(new Date().getFullYear()).optional(),
   verified: z.boolean().default(false),
-  verificationUrl: z.string().url().optional().nullable(),
+  verificationUrl: z.string().url().optional(),
 });
 
 // Step 1: Identity & Trust
 export const Step1Schema = z.object({
-  avatar_url: z.string().url("Invalid avatar URL").optional().nullable(),
+  avatar_url: z.string().url("Invalid avatar URL").optional(),
   headline: z
     .string()
     .min(10, "Headline must be at least 10 characters")
@@ -35,7 +35,6 @@ export const Step1Schema = z.object({
     .string()
     .url("Invalid video URL")
     .optional()
-    .nullable()
     .refine(
       (url) => {
         if (!url) return true;
@@ -114,15 +113,15 @@ export const TutorProfileSchema = z.object({
   intro_video_url: Step1Schema.shape.intro_video_url,
   badges: z.array(
     z.enum(["Verified", "Fast Responder", "Top 1%", "Certified", "Super Tutor"])
-  ).default([]),
+  ).optional(),
   experience_years: Step2Schema.shape.experience_years,
   languages: Step2Schema.shape.languages,
   education: Step2Schema.shape.education,
   avatar_url: Step1Schema.shape.avatar_url,
-  id_verified: z.boolean().default(false),
+  id_verified: z.boolean().optional(),
   hourlyRate: Step3Schema.shape.hourlyRate,
   experience: z.number().int().min(0),
-  is_published: z.boolean().default(false),
+  is_published: z.boolean().optional(),
   profile_draft: z.object({
     step1: Step1Schema.optional(),
     step2: Step2Schema.optional(),

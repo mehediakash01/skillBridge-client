@@ -589,9 +589,8 @@ export default function TutorSessionsPage() {
           )}
         </CardContent>
       </Card>
-      </div>
 
-      {/* ════ Session Cards for Quick Actions ════ */}
+      {/* Session Cards for Quick Actions */}
       {confirmed.length > 0 && (
         <div className="space-y-4">
           <div>

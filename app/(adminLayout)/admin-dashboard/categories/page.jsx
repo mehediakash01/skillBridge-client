@@ -63,17 +63,18 @@ export default function AdminCategoriesPage() {
 
   const { mutate: removeCategory, isPending: deleting } = useMutation({
     mutationFn: deleteCategory,
-      const { mutate: saveCategory, isLoading: saving } = useMutation({
-        mutationFn: ({ id, payload }) => updateCategory(id, payload),
-        onSuccess: () => {
-          toast.success("Category updated!")
-          setFormOpenFor(null)
-          queryClient.invalidateQueries({ queryKey: ["admin-categories"] })
-        },
-        onError: (err) => toast.error(err.message),
-      })
     onSuccess: () => {
       toast.success("Category deleted")
+      queryClient.invalidateQueries({ queryKey: ["admin-categories"] })
+    },
+    onError: (err) => toast.error(err.message),
+  })
+
+  const { mutate: saveCategory, isLoading: saving } = useMutation({
+    mutationFn: ({ id, payload }) => updateCategory(id, payload),
+    onSuccess: () => {
+      toast.success("Category updated!")
+      setFormOpenFor(null)
       queryClient.invalidateQueries({ queryKey: ["admin-categories"] })
     },
     onError: (err) => toast.error(err.message),

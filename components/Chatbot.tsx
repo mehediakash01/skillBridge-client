@@ -34,10 +34,7 @@ export function Chatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // AI SDK v5: useChat uses sendMessage() — no input/handleSubmit returned
-  const { messages, sendMessage, status } = useChat({
-    api: '/api/chat',
-    messages: loadHistory(),
-  });
+  const { messages, sendMessage, status } = useChat();
 
   const isLoading = status === 'streaming' || status === 'submitted';
 

@@ -82,7 +82,7 @@ export default function DashboardPage() {
     })
 
     return Object.entries(monthlyData)
-      .sort((a, b) => new Date(`${a[0]} 1`) - new Date(`${b[0]} 1`))
+      .sort((a, b) => (new Date(`${a[0]} 1`) as any) - (new Date(`${b[0]} 1`) as any))
       .map(([month, data]) => ({
         month,
         sessions: data.sessions,
