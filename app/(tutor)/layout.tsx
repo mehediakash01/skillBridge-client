@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 import {
   LayoutDashboard, Clock, UserCircle, LogOut,
-  GraduationCap, Menu, X, ChevronRight, Home,
+  GraduationCap, Menu, X, ChevronRight, Home, Info, Sparkles, CircleHelp,
 } from "lucide-react"
 import { authClient } from "@/src/lib/auth-client"
 import { cn } from "@/src/lib/utils"
@@ -94,6 +94,30 @@ function SidebarContent({
             Quick Links
           </p>
           <Link
+            href="/about"
+            onClick={onClose}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
+          >
+            <Info className="w-4 h-4 shrink-0" />
+            About LearnForge
+          </Link>
+          <Link
+            href="/ai"
+            onClick={onClose}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
+          >
+            <Sparkles className="w-4 h-4 shrink-0" />
+            LearnForge AI
+          </Link>
+          <Link
+            href="/help"
+            onClick={onClose}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
+          >
+            <CircleHelp className="w-4 h-4 shrink-0" />
+            Help Center
+          </Link>
+          <Link
             href="/"
             onClick={onClose}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
@@ -173,7 +197,7 @@ export default function TutorLayout({ children }: { children: React.ReactNode })
               <Menu className="w-5 h-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-[280px] sm:w-72">
+          <SheetContent side="left" className="p-0 w-70 sm:w-72">
             <SidebarContent
               pathname={pathname}
               user={user}
@@ -238,7 +262,7 @@ export default function TutorLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Page content */}
-        <main className="flex-1 p-4 pt-[72px] md:pt-0 md:p-6 lg:p-8 overflow-auto">
+        <main className="flex-1 p-4 pt-18 md:pt-0 md:p-6 lg:p-8 overflow-auto">
           {children}
         </main>
       </div>

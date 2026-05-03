@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Moon, Sun, Menu, LogOut, LayoutDashboard, GraduationCap, BookOpen, Lightbulb, ChevronDown, Info } from "lucide-react";
+import { Moon, Sun, Menu, LogOut, LayoutDashboard, GraduationCap, BookOpen, Lightbulb, ChevronDown, Info, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useSession } from "@/src/hooks/useSession";
@@ -22,8 +22,9 @@ import { Badge } from "@/components/ui/badge";
 const NAV_LINKS = [
   { href: "/tutors", label: "Find Tutors", icon: GraduationCap },
   { href: "/how-it-works", label: "How It Works", icon: Lightbulb },
+  { href: "/ai", label: "LearnForge AI", icon: Sparkles, badge: "New" },
   { href: "/become-a-tutor", label: "Become a Tutor", icon: BookOpen, badge: "Earn" },
-  { href: "/about-Us", label: "About Us", icon: Info },
+  { href: "/about", label: "About Us", icon: Info },
 ];
 
 interface User {
