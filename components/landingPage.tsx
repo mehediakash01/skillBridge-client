@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { getTutors } from "@/src/services/tutor.service"
 import { CategoryExplorer } from "@/components/CategoryExplorer"
 import { TutorProfileCard } from "@/components/TutorProfileCard"

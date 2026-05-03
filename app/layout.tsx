@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Chatbot } from "@/components/Chatbot";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,6 +44,7 @@ export default function RootLayout({
           <QueryProvider>
             <TooltipProvider><main className="min-h-[calc(100vh-8rem)]">{children}</main></TooltipProvider>
             <Toaster richColors position="top-right" closeButton />
+            <Chatbot />
           </QueryProvider>
         </ThemeProvider>
       </body>
