@@ -39,13 +39,16 @@ function TutorSetupPage() {
 
 // 2. Using individual components
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   DragDropUploader,
   PricingSlider,
   TagCloudInput,
   LiveCardPreview,
   ProfileCompletenessBar,
+  Step1Form,
+  Step2Form,
+  Step3Form,
 } from "@/components/tutor-profile";
 
 export function CustomProfileForm() {
@@ -236,7 +239,7 @@ async function saveDraft(userId: string, draft: any) {
  * ===========================
  */
 
-import { useForm, FormProvider, Controller } from "react-hook-form";
+import { useForm, FormProvider, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export function ProfileFormExample() {
@@ -291,7 +294,23 @@ export function MultiStepTutorForm() {
 }
 
 // Pattern 2: Auto-saving with debounce
-import { useDebouncedCallback } from "use-debounce";
+function useDebouncedCallback<T extends (...args: any[]) => void>(
+  callback: T,
+  delay: number
+) {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  return useCallback(
+    (...args: Parameters<T>) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => callback(...args), delay);
+    },
+    [callback, delay]
+  );
+}
 
 export function AutoSavingForm() {
   const methods = useForm({ resolver: zodResolver(TutorProfileSchema) });
