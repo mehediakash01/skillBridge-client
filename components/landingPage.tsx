@@ -161,7 +161,7 @@ export default async function LandingPage() {
 
               <motion.h1 variants={fadeUp} className="font-display text-5xl md:text-7xl lg:text-[5.5rem] font-black leading-[1.05] tracking-tight text-foreground">
                 Unlock Your
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-500 to-primary bg-[length:200%_auto] animate-[shimmer_4s_linear_infinite] pb-2 shimmer-text">Full Potential.</span>
+                <span className="block text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-500 to-primary bg-[length:200%_auto] animate-[shimmer_4s_linear_infinite] pb-2 shimmer-text">Full Potential.</span>
                 <span className="block font-light italic text-muted-foreground mt-2">Learn Anything.</span>
               </motion.h1>
 
